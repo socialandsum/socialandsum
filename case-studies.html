@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case studies — Social + Sum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .cs-hero{ padding:80px 28px 10px; text-align:center; }
+  .cs-hero .kicker{ justify-content:center; }
+  .cs-hero p.lead{ margin:0 auto; }
+
+  .cs-detail{
+    margin-top:60px; padding-top:56px; border-top:1px solid var(--line);
+    display:grid; grid-template-columns:220px 1fr; gap:40px; align-items:start;
+  }
+  .cs-detail:first-of-type{ border-top:none; margin-top:40px; padding-top:0; }
+  @media (max-width:700px){ .cs-detail{ grid-template-columns:1fr; } }
+  .cs-thumb{
+    aspect-ratio:4/3; border-radius:12px; background:
+      repeating-linear-gradient(135deg, var(--line) 0 2px, transparent 2px 14px), var(--ink);
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .cs-thumb svg{ width:40px; height:40px; opacity:0.9; }
+  .cs-thumb .cs-soon{
+    position:absolute; bottom:10px; right:12px; font-size:10.5px; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--paper); opacity:0.75; font-weight:600;
+  }
+  .cs-tag{
+    display:inline-block; font-size:11px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600;
+    color:var(--gold-deep); background:rgba(217,164,65,0.12); border-radius:100px; padding:4px 10px; margin-bottom:12px;
+  }
+  .cs-body h2{ margin:0 0 16px; }
+  .cs-fields{ display:flex; flex-direction:column; gap:16px; margin-top:8px; }
+  .cs-field h3{ font-size:13px; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; margin:0 0 4px; }
+  .cs-field p{ font-size:14.5px; line-height:1.65; color:var(--ink-soft); margin:0; max-width:60ch; }
+
+  .cs-cta{ text-align:center; margin-top:70px; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-brand">
+    <svg class="nav-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="var(--ink)"/>
+      <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+    </svg>
+    <span class="nav-word">Social<span class="em">+Sum</span><span class="dot">.</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About us</a>
+    <a href="service.html">Service</a>
+    <a href="case-studies.html">Case studies</a>
+    <a href="blog.html">Blog</a>
+  </div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <a href="book-a-call.html" class="btn btn-primary btn-sm">Book a call</a>
+    <a href="start.html" class="btn btn-sm btn-gold">Onboard</a>
+  </div>
+</nav>
+
+<header class="cs-hero wrap">
+  <div class="kicker">Case studies</div>
+  <h2 style="margin:0 auto 12px;">Proof, in detail<span class="dot">.</span></h2>
+  <p class="lead">The founding cohort is only just starting, so there's nothing real to show yet. These are placeholders for the level of detail each write-up will go into once a 90-day cycle completes — not invented results.</p>
+</header>
+
+<main class="wrap" style="padding-bottom:60px;">
+
+  <div class="cs-detail reveal" id="case-1">
+    <div class="cs-thumb">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="72" cy="26" r="6" fill="var(--coral)"/></svg>
+      <span class="cs-soon">Placeholder</span>
+    </div>
+    <div class="cs-body">
+      <div class="cs-tag">Coming soon</div>
+      <h2>Case study 01</h2>
+      <div class="cs-fields">
+        <div class="cs-field"><h3>Studio</h3><p>Reserved for the first founding-cohort studio — starting point, size and location to go here.</p></div>
+        <div class="cs-field"><h3>Starting point</h3><p>What referrals alone were and weren't delivering before the second pipeline went live.</p></div>
+        <div class="cs-field"><h3>What we did</h3><p>The specific qualification criteria, creative angles and CRM setup used for this studio, once agreed.</p></div>
+        <div class="cs-field"><h3>The numbers</h3><p>Cost-per-qualified-opportunity, leads and closed sales — real figures once a 90-day cycle completes.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cs-detail reveal reveal-d1" id="case-2">
+    <div class="cs-thumb">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(90 50 50)"><polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></g><circle cx="74" cy="76" r="6" fill="var(--coral)"/></svg>
+      <span class="cs-soon">Placeholder</span>
+    </div>
+    <div class="cs-body">
+      <div class="cs-tag">Coming soon</div>
+      <h2>Case study 02</h2>
+      <div class="cs-fields">
+        <div class="cs-field"><h3>Studio</h3><p>Reserved for the second client's story.</p></div>
+        <div class="cs-field"><h3>Starting point</h3><p>Where their enquiry pipeline stood before launch.</p></div>
+        <div class="cs-field"><h3>What we did</h3><p>The mechanism in practice for their studio specifically.</p></div>
+        <div class="cs-field"><h3>The numbers</h3><p>What changed, once there's something real to report.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cs-detail reveal reveal-d2" id="case-3">
+    <div class="cs-thumb">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(180 50 50)"><polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></g><circle cx="26" cy="76" r="6" fill="var(--coral)"/></svg>
+      <span class="cs-soon">Placeholder</span>
+    </div>
+    <div class="cs-body">
+      <div class="cs-tag">Coming soon</div>
+      <h2>Case study 03</h2>
+      <div class="cs-fields">
+        <div class="cs-field"><h3>Studio</h3><p>Reserved for a studio's before-and-after on cost-per-qualified-opportunity.</p></div>
+        <div class="cs-field"><h3>Starting point</h3><p>Their cost-per-opportunity before the second pipeline.</p></div>
+        <div class="cs-field"><h3>What we did</h3><p>How the guarantee's cost ceiling was set and held for this studio.</p></div>
+        <div class="cs-field"><h3>The numbers</h3><p>Before-and-after cost-per-qualified-opportunity, once measured.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cs-detail reveal reveal-d3" id="case-4">
+    <div class="cs-thumb">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(270 50 50)"><polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></g><circle cx="26" cy="24" r="6" fill="var(--coral)"/></svg>
+      <span class="cs-soon">Placeholder</span>
+    </div>
+    <div class="cs-body">
+      <div class="cs-tag">Coming soon</div>
+      <h2>Case study 04</h2>
+      <div class="cs-fields">
+        <div class="cs-field"><h3>Studio</h3><p>Reserved for a studio that started sceptical about paid social.</p></div>
+        <div class="cs-field"><h3>Starting point</h3><p>What made them hesitant to try paid ads in the first place.</p></div>
+        <div class="cs-field"><h3>What we did</h3><p>What specifically changed their mind, once there's a real answer.</p></div>
+        <div class="cs-field"><h3>The numbers</h3><p>Their results, once a cycle completes.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cs-cta reveal">
+    <a href="book-a-call.html" class="btn btn-primary">Be one of the first case studies <span class="dot">·</span></a>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-brand">
+    <svg class="footer-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+    </svg>
+    <span>Social<span class="em">+Sum</span><span class="dot">.</span></span>
+  </div>
+  <div class="footer-social">
+    <a href="https://www.instagram.com/socialandsum" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>
+    </a>
+  </div>
+  <div class="footer-actions">
+    <a href="faq.html" class="btn btn-sm btn-gold">FAQ</a>
+    <a href="contact.html" class="btn btn-sm footer-email">Email us</a>
+    <a href="book-a-call.html" class="btn btn-sm footer-cta">Book a call <span class="dot">·</span></a>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ — Social + Sum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .faq-hero{ padding:80px 28px 10px; text-align:center; }
+  .faq-hero .kicker{ justify-content:center; }
+  .faq-hero p.lead{ margin:0 auto; }
+
+  .faq-item{ border-bottom:1px solid var(--line); }
+  .faq-q{
+    width:100%; text-align:left; background:none; border:none; padding:22px 0;
+    display:flex; justify-content:space-between; align-items:center; gap:20px;
+    font-family:inherit; font-size:16px; font-weight:600; color:var(--ink);
+    cursor:pointer;
+  }
+  .faq-plus{ width:20px; height:20px; flex-shrink:0; position:relative; }
+  .faq-plus::before, .faq-plus::after{
+    content:""; position:absolute; background:var(--gold-deep); top:50%; left:50%;
+    transition:transform .35s cubic-bezier(.2,.8,.2,1);
+  }
+  .faq-plus::before{ width:14px; height:2px; transform:translate(-50%,-50%); }
+  .faq-plus::after{ width:2px; height:14px; transform:translate(-50%,-50%); }
+  .faq-item.open .faq-plus::after{ transform:translate(-50%,-50%) rotate(90deg); opacity:0; }
+  .faq-a{ max-height:0; overflow:hidden; transition:max-height .45s cubic-bezier(.2,.8,.2,1); }
+  .faq-item.open .faq-a{ max-height:260px; }
+  .faq-a p{ margin:0 0 22px; font-size:14.5px; line-height:1.65; color:var(--ink-soft); max-width:60ch; }
+
+  .faq-cta{ text-align:center; margin-top:56px; }
+  .faq-note{ font-size:13px; color:var(--ink-soft); text-align:center; margin-top:16px; }
+  .faq-note a{ color:var(--coral); font-weight:600; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-brand">
+    <svg class="nav-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="var(--ink)"/>
+      <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+    </svg>
+    <span class="nav-word">Social<span class="em">+Sum</span><span class="dot">.</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About us</a>
+    <a href="service.html">Service</a>
+    <a href="blog.html">Blog</a>
+  </div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <a href="book-a-call.html" class="btn btn-primary btn-sm">Book a call</a>
+    <a href="start.html" class="btn btn-sm btn-gold">Onboard</a>
+  </div>
+</nav>
+
+<header class="faq-hero wrap">
+  <div class="kicker">FAQ</div>
+  <h2 style="margin:0 auto 12px;">The specifics of the service<span class="dot">.</span></h2>
+  <p class="lead">The questions on the homepage handle the big objections. These go into how it actually works.</p>
+</header>
+
+<main class="wrap" style="padding-bottom:60px;">
+  <div style="margin-top:12px;">
+
+    <div class="faq-item reveal">
+      <button class="faq-q"><span>What's actually included in the £1,000/month fee?</span><span class="faq-plus"></span></button>
+      <div class="faq-a"><p>Three things, working together: the Meta ad campaigns themselves, the CRM automations that follow up every lead the moment it comes in, and the qualification frameworks and consultation scripts your sales conversations use. It's not "we run your ads" — all three layers are what you're paying for.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <button class="faq-q"><span>Is the ad spend part of that £1,000/month, or separate?</span><span class="faq-plus"></span></button>
+      <div class="faq-a"><p>Separate. The £1,000/month covers the build and management. Ad spend — typically £500–£2,000/month — is paid directly to Meta from your own ad account. We never touch that money or have it pass through us.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <button class="faq-q"><span>Which platforms do you run campaigns on?</span><span class="faq-plus"></span></button>
+      <div class="faq-a"><p>Meta — Facebook and Instagram. That's where the qualification-at-the-lead-form mechanism, the CRM automations and the guarantee are all built around, rather than spreading thin across multiple platforms.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <button class="faq-q"><span>What exactly counts as a "qualified" lead?</span><span class="faq-plus"></span></button>
+      <div class="faq-a"><p>Whatever you and we agree it should mean for your studio, before campaigns go live — project size, timeline, budget signals, whatever actually predicts a real client for you. That criteria is built into the lead form itself, so it's filtering before an enquiry ever reaches your inbox, not after.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <button class="faq-q"><span>What happens if cost-per-qualified-opportunity goes over the agreed ceiling?</span><span class="faq-plus"></span></button>
+      <div class="faq-a"><p>We keep working at no extra cost until it's back under the ceiling, provided leads are followed up within the agreed window on your end. That's the part of the service that's guaranteed. Closed sales aren't guaranteed — that depends on your consultation, not our ad account.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <button class="faq-q"><span>Do I need my own CRM already?</span><span class="faq-plus"></span></button>
+      <div class="faq-a"><p>No. If you already use one, the automations connect into it. If not, we set one up as part of the build — either way, the follow-up, reminders and reactivation sequences run automatically from the moment a lead comes in.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <button class="faq-q"><span>Do you handle the sales calls for me?</span><span class="faq-plus"></span></button>
+      <div class="faq-a"><p>No — the consultations stay yours. What you get is the qualification framework and consultation scripts built from five years of running B2B sales funnels, so the conversations you're already having convert at a higher rate.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <button class="faq-q"><span>Are the numbers in the ROI calculator guaranteed?</span><span class="faq-plus"></span></button>
+      <div class="faq-a"><p>No — they're the conservative case: £40 cost per lead, 20% qualify, 40% of qualified get a quote, 15% close within 90 days. That's the low end of the range we've built the guarantee around, not an average or a promise. Real results depend on your consultation process too.</p></div>
+    </div>
+
+  </div>
+
+  <div class="faq-cta reveal">
+    <a href="book-a-call.html" class="btn btn-primary">Book a discovery call <span class="dot">·</span></a>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-brand">
+    <svg class="footer-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+    </svg>
+    <span>Social<span class="em">+Sum</span><span class="dot">.</span></span>
+  </div>
+  <div class="footer-social">
+    <a href="https://www.instagram.com/socialandsum" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>
+    </a>
+  </div>
+  <div class="footer-actions">
+    <a href="faq.html" class="btn btn-sm btn-gold">FAQ</a>
+    <a href="contact.html" class="btn btn-sm footer-email">Email us</a>
+    <a href="book-a-call.html" class="btn btn-sm footer-cta">Book a call <span class="dot">·</span></a>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+<script>
+  document.querySelectorAll('.faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btn.parentElement.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>

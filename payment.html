@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Make a payment — Social + Sum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .pay-hero{ padding:80px 28px 10px; text-align:center; }
+  .pay-hero .kicker{ justify-content:center; }
+  .pay-hero p.lead{ margin:0 auto; }
+
+  .pay-options{
+    margin:40px auto 0; max-width:720px;
+    display:flex; gap:22px; flex-wrap:wrap; justify-content:center;
+  }
+  .pay-panel{
+    flex:1 1 300px; max-width:340px;
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:14px;
+    padding:38px 32px; text-align:center;
+  }
+  .pay-icon{ width:48px; height:48px; margin:0 auto 18px; display:block; }
+  .pay-panel h3{ font-size:18px; font-weight:600; margin:0 0 6px; }
+  .pay-panel .pay-price{ font-size:14px; color:var(--gold-deep); font-weight:600; margin:0 0 16px; }
+  .pay-panel p{ font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0 auto 20px; max-width:34ch; }
+  .pay-secure{ display:flex; align-items:center; justify-content:center; gap:8px; font-size:12px; color:var(--ink-soft); margin-top:36px; }
+  .pay-secure svg{ width:15px; height:15px; }
+
+  .pay-fallback{ text-align:center; margin-top:32px; }
+  .pay-fallback p{ font-size:13.5px; color:var(--ink-soft); margin-bottom:14px; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-brand">
+    <svg class="nav-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="var(--ink)"/>
+      <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+    </svg>
+    <span class="nav-word">Social<span class="em">+Sum</span><span class="dot">.</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About us</a>
+    <a href="service.html">Service</a>
+    <a href="blog.html">Blog</a>
+  </div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <a href="book-a-call.html" class="btn btn-primary btn-sm">Book a call</a>
+    <a href="start.html" class="btn btn-sm btn-gold">Onboard</a>
+  </div>
+</nav>
+
+<header class="pay-hero wrap">
+  <div class="kicker">Payment</div>
+  <h2 style="margin:0 auto 12px;">Make a secure payment<span class="dot">.</span></h2>
+  <p class="lead">For clients who've had their discovery call and are ready to go ahead, pick the option you agreed and pay securely below via Stripe.</p>
+</header>
+
+<main class="wrap" style="padding-bottom:100px;">
+  <div class="pay-options">
+    <div class="pay-panel reveal">
+      <svg class="pay-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="14" y="30" width="72" height="48" rx="8" fill="none" stroke="var(--ink)" stroke-width="7"/>
+        <line x1="14" y1="46" x2="86" y2="46" stroke="var(--ink)" stroke-width="7"/>
+        <line x1="28" y1="64" x2="50" y2="64" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="74" cy="22" r="6" fill="var(--coral)"/>
+      </svg>
+      <h3>Pay upfront</h3>
+      <p class="pay-price">£3,000, 3 months</p>
+      <p>Pay the full amount in one go and you're set for the next 3 months.</p>
+      <a href="https://buy.stripe.com/bJe14oaZy4t68J0eNN5sA00" target="_blank" rel="noopener" class="btn btn-primary">Pay now <span class="dot">·</span></a>
+    </div>
+
+    <div class="pay-panel reveal reveal-d1">
+      <svg class="pay-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="14" y="30" width="72" height="48" rx="8" fill="none" stroke="var(--ink)" stroke-width="7"/>
+        <line x1="14" y1="46" x2="86" y2="46" stroke="var(--ink)" stroke-width="7"/>
+        <line x1="28" y1="64" x2="50" y2="64" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="74" cy="22" r="6" fill="var(--coral)"/>
+      </svg>
+      <h3>Pay monthly</h3>
+      <p class="pay-price">£1,000 a month, 3 months</p>
+      <p>Spread it out, billed monthly by Stripe for the 3 month term.</p>
+      <a href="https://buy.stripe.com/00w5kEaZyaRu0cucFF5sA01" target="_blank" rel="noopener" class="btn btn-primary">Pay now <span class="dot">·</span></a>
+    </div>
+  </div>
+
+  <div class="pay-fallback reveal-d1" style="text-align:center; margin-top:24px;">
+    <div class="pay-secure" style="justify-content:center;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      Payments are processed securely by Stripe — card details never pass through this site.
+    </div>
+  </div>
+
+  <div class="pay-fallback reveal reveal-d1">
+    <p>Already paid?</p>
+    <a href="upload-assets.html" class="btn btn-ghost">Upload your brand assets <span class="dot">·</span></a>
+  </div>
+
+  <div class="pay-fallback reveal reveal-d1">
+    <p>Not ready to pay yet?</p>
+    <a href="book-a-call.html" class="btn btn-ghost">Book a discovery call <span class="dot">·</span></a>
+  </div>
+</main>
+
+<footer>
+  <div style="display:flex; align-items:center; gap:22px;">
+    <div class="footer-brand">
+      <svg class="footer-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+      </svg>
+      <span>Social<span class="em">+Sum</span><span class="dot">.</span></span>
+    </div>
+    <div class="footer-social">
+      <a href="https://www.instagram.com/socialandsum" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="footer-actions">
+    <a href="faq.html" class="btn btn-sm btn-gold">FAQ</a>
+    <a href="contact.html" class="btn btn-sm footer-email">Email us</a>
+    <a href="book-a-call.html" class="btn btn-sm footer-cta">Book a call <span class="dot">·</span></a>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Second Pipeline — Social + Sum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  main section.block{ padding:56px 0; }
+  #pricing{ padding:44px 0; }
+
+  /* ---- Home contact panel ---- */
+  .home-contact-hero{ text-align:center; }
+  .home-contact-hero .kicker{ justify-content:center; }
+  .home-contact-hero p.lead{ margin:0 auto; }
+  .contact-panel{
+    margin:32px auto 0; max-width:560px;
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:14px;
+    padding:40px;
+  }
+  .contact-field{ margin-bottom:20px; }
+  .contact-field label{ display:block; font-size:13px; font-weight:600; color:var(--ink-soft); margin-bottom:8px; }
+  .contact-field input, .contact-field textarea{
+    width:100%; font-family:inherit; font-size:15px; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line); border-radius:8px;
+    padding:12px 14px; outline:none; transition:border-color .25s ease;
+  }
+  .contact-field input:focus, .contact-field textarea:focus{ border-color:var(--gold-deep); }
+  .contact-field textarea{ resize:vertical; min-height:120px; font-family:inherit; }
+  .contact-submit{ width:100%; margin-top:6px; }
+  .contact-note{ font-size:12.5px; color:var(--ink-soft); text-align:center; margin-top:16px; line-height:1.6; }
+  .contact-status{ font-size:13.5px; text-align:center; margin-top:14px; color:var(--gold-deep); font-weight:600; display:none; }
+  .contact-status.show{ display:block; }
+
+  /* ---- Hero ---- */
+  .hero{
+    position:relative; overflow:hidden;
+    padding:120px 28px 50px;
+    display:flex; flex-direction:column; align-items:center; text-align:center; gap:26px;
+  }
+  .hero-blob{
+    position:absolute; border-radius:50%; filter:blur(60px); opacity:0.35; pointer-events:none;
+  }
+  .blob-gold{ width:420px; height:420px; background:var(--gold); top:-160px; left:-120px; }
+  .blob-coral{ width:280px; height:280px; background:var(--coral); bottom:-120px; right:-80px; opacity:0.22; }
+
+  .hero-mark{ width:64px; height:64px; position:relative; z-index:1; }
+  .hero-mark polyline{
+    stroke-dasharray:220; stroke-dashoffset:220;
+    animation:draw 1.4s cubic-bezier(.2,.7,.2,1) .2s forwards;
+  }
+  .hero-mark circle.dot{
+    opacity:0; transform:scale(0); transform-origin:72px 26px;
+    animation:pop .5s cubic-bezier(.3,1.4,.5,1) 1.3s forwards;
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  @keyframes pop{ to{ opacity:1; transform:scale(1); } }
+
+  .hero-kicker{
+    font-size:13px; letter-spacing:0.08em; color:var(--gold-deep); font-weight:600;
+    position:relative; z-index:1;
+  }
+  .hero h1{
+    font-size:clamp(34px,5.6vw,58px); line-height:1.08; font-weight:600; letter-spacing:-0.02em;
+    max-width:15ch; margin:0; position:relative; z-index:1;
+  }
+  .hero p.sub{
+    font-size:clamp(16px,2vw,19px); color:var(--ink-soft); max-width:52ch; line-height:1.6; margin:0;
+    position:relative; z-index:1;
+  }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-top:6px; position:relative; z-index:1; }
+  .hero-fine{ font-size:12.5px; color:var(--ink-soft); letter-spacing:0.03em; position:relative; z-index:1; }
+
+  .scroll-cue{
+    margin-top:34px; width:22px; height:22px; position:relative; z-index:1;
+    animation:bob 2s ease-in-out infinite;
+  }
+  @keyframes bob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(6px);} }
+
+  /* ---- Problem ---- */
+  #problem{ padding-top:48px; }
+  .problem-quote{
+    color:var(--ink);
+    background:var(--paper-raised); border:1px solid var(--line); border-left:3px solid var(--coral);
+    border-radius:2px; padding:26px 28px; font-size:16px; line-height:1.6;
+  }
+  .problem-cards{ display:flex; gap:20px; margin-top:32px; flex-wrap:wrap; }
+  .problem-card{
+    color:var(--ink);
+    flex:1 1 220px; background:var(--paper-raised); border:1px solid var(--line); border-left:3px solid var(--line);
+    border-radius:10px; padding:26px 24px;
+    transition:transform .35s cubic-bezier(.2,.8,.2,1), border-color .35s ease;
+  }
+  .problem-card:hover,
+  .problem-cards:hover .problem-card{ transform:translateY(-6px); border-left-color:var(--coral); }
+  .problem-cards:hover .problem-card:nth-child(1){ transition-delay:0s; }
+  .problem-cards:hover .problem-card:nth-child(2){ transition-delay:.08s; }
+  .problem-cards:hover .problem-card:nth-child(3){ transition-delay:.16s; }
+  .problem-cards:hover .problem-card:nth-child(4){ transition-delay:.24s; }
+  .problem-icon-wrap{ width:auto; height:auto; margin-bottom:16px; background:none; display:block; }
+  .problem-icon-wrap svg{ transition:transform .4s cubic-bezier(.3,1.4,.5,1); }
+  .problem-card:hover .problem-icon-wrap svg,
+  .problem-cards:hover .problem-card .problem-icon-wrap svg{ transform:scale(1.15) rotate(-4deg); }
+  .problem-icon{ width:56px; height:56px; }
+  @keyframes problemPop{ 0%{ transform:scale(1); } 45%{ transform:scale(1.08); } 100%{ transform:scale(1); } }
+  .problem-card.pop{ animation:problemPop .65s cubic-bezier(.3,1.2,.4,1); }
+  .problem-card h3{ font-size:16px; font-weight:600; margin:0 0 8px; color:var(--ink); }
+  .problem-card p{ font-size:14px; line-height:1.6; color:var(--ink-soft); margin:0; }
+  .problem-tag{
+    display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; color:var(--coral);
+    opacity:0; transform:translateY(4px); transition:opacity .3s ease, transform .3s ease; margin-top:14px; height:16px;
+  }
+  .problem-tag svg{ width:14px; height:14px; }
+  .problem-card:hover .problem-tag,
+  .problem-cards:hover .problem-card .problem-tag{ opacity:1; transform:translateY(0); }
+
+  /* ---- Swipe cards (mechanism) ---- */
+  .swipe-wrap{ margin-top:40px; position:relative; }
+  .swipe-track{
+    display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x proximity;
+    padding:6px 6px 22px; margin:0 -6px; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .swipe-track::-webkit-scrollbar{ display:none; }
+  .swipe-track.dragging{ scroll-snap-type:none; }
+  .swipe-card{
+    scroll-snap-align:start; flex:0 0 min(320px,80vw);
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:10px;
+    padding:30px 26px; display:flex; flex-direction:column; gap:18px;
+    transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease, border-color .4s ease;
+    user-select:none;
+  }
+  .swipe-card:hover{ transform:translateY(-6px); box-shadow:var(--shadow); border-color:var(--gold-deep); }
+  .card-icon{ width:44px; height:44px; }
+  .swipe-card h3{ font-size:17px; font-weight:600; margin:0; }
+  .swipe-card p{ font-size:14.5px; line-height:1.6; color:var(--ink-soft); margin:0; }
+  .drag-bar-track{
+    position:relative; width:100%; height:4px; border-radius:100px; background:var(--line);
+    margin-top:6px; overflow:hidden;
+  }
+  .drag-bar-thumb{
+    position:absolute; top:0; left:0; height:100%; border-radius:100px; background:var(--gold-deep);
+    transition:left .15s ease;
+  }
+  .swipe-hint{ font-size:12px; color:var(--ink-soft); margin-top:4px; display:flex; align-items:center; gap:6px; }
+  .swipe-hint svg{ width:16px; height:16px; animation:slide 1.8s ease-in-out infinite; }
+  @keyframes slide{ 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(5px);} }
+
+  /* ---- Guarantee ---- */
+  .guarantee-box{
+    margin-top:36px; background:rgba(217,164,65,0.08); border:1px solid rgba(217,164,65,0.35);
+    border-radius:10px; padding:34px 32px; display:flex; gap:24px; align-items:flex-start;
+  }
+  @media (max-width:640px){ .guarantee-box{ flex-direction:column; } }
+  .guarantee-icon{ width:48px; height:48px; flex-shrink:0; }
+  .guarantee-box p{ margin:0 0 12px; font-size:16px; line-height:1.65; color:var(--paper); }
+  .guarantee-box p:last-child{ margin-bottom:0; }
+  .guarantee-box p.small{ font-size:13.5px; color:#9AA6AC; }
+
+  /* ---- Slider control (reused by the calculator) ---- */
+  .timeline-slider{
+    -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:100px;
+    background:linear-gradient(to right, var(--gold) 0%, var(--gold) var(--fill,0%), var(--line) var(--fill,0%), var(--line) 100%);
+    outline:none; cursor:pointer; display:block;
+  }
+  .timeline-slider::-webkit-slider-thumb{
+    -webkit-appearance:none; width:22px; height:22px; border-radius:50%;
+    background:var(--coral); border:3px solid var(--paper); box-shadow:0 2px 8px rgba(22,34,43,0.25);
+    cursor:pointer; transition:transform .2s ease;
+  }
+  .timeline-slider::-webkit-slider-thumb:hover{ transform:scale(1.15); }
+  .timeline-slider::-moz-range-thumb{
+    width:22px; height:22px; border-radius:50%; background:var(--coral); border:3px solid var(--paper);
+    box-shadow:0 2px 8px rgba(22,34,43,0.25); cursor:pointer;
+  }
+  /* ---- Roadmap swipe ---- */
+  .road-track{
+    display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x proximity;
+    padding:6px 6px 22px; margin:36px -6px 0; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+  }
+  .road-track::-webkit-scrollbar{ display:none; }
+  .road-track.dragging{ scroll-snap-type:none; }
+  .road-card{
+    scroll-snap-align:start; flex:0 0 240px;
+    border-top:2px solid var(--gold); padding-top:18px;
+    transition:transform .4s cubic-bezier(.2,.8,.2,1);
+  }
+  .road-card:hover{ transform:translateY(-4px); }
+  .road-num{ font-size:13px; color:var(--gold-deep); font-weight:600; letter-spacing:0.04em; }
+  .road-days{ font-size:14.5px; color:var(--ink-soft); margin:6px 0 10px; }
+  .road-card h3{ font-size:16px; font-weight:600; margin:0 0 8px; }
+  .road-card p{ font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0; }
+
+  /* ---- Case studies carousel ---- */
+  .case-carousel{ position:relative; margin-top:40px; }
+  .case-track{
+    display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x proximity;
+    padding:6px 6px 22px; margin:0 -6px; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+  }
+  .case-track::-webkit-scrollbar{ display:none; }
+  .case-track.dragging{ scroll-snap-type:none; }
+  .case-card{
+    scroll-snap-align:start; flex:0 0 min(300px,82vw);
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+    user-select:none;
+  }
+  .case-card:hover{ transform:translateY(-6px); box-shadow:var(--shadow); }
+  .case-thumb{
+    aspect-ratio:16/10; background:
+      repeating-linear-gradient(135deg, var(--line) 0 2px, transparent 2px 14px),
+      var(--ink);
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .case-thumb svg{ width:44px; height:44px; opacity:0.9; }
+  .case-thumb .case-soon{
+    position:absolute; bottom:10px; right:12px; font-size:10.5px; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--paper); opacity:0.75; font-weight:600;
+  }
+  .case-body{ padding:22px 22px 24px; }
+  .case-tag{
+    display:inline-block; font-size:11px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600;
+    color:var(--gold-deep); background:rgba(217,164,65,0.12); border-radius:100px; padding:4px 10px; margin-bottom:12px;
+  }
+  .case-body h3{ font-size:16px; font-weight:600; margin:0 0 8px; }
+  .case-body p{ font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0; }
+  .case-more{ display:inline-block; font-size:12.5px; font-weight:600; color:var(--coral); margin-top:12px; }
+  .case-arrow{
+    position:absolute; top:calc(50% - 34px); transform:translateY(-50%); z-index:5;
+    width:40px; height:40px; border-radius:50%; background:var(--ink); border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .3s cubic-bezier(.2,.8,.2,1), background .3s ease;
+  }
+  .case-arrow:hover{ background:var(--coral); transform:translateY(-50%) scale(1.08); }
+  .case-arrow svg{ width:18px; height:18px; }
+  .case-arrow-prev{ left:-14px; }
+  .case-arrow-next{ right:-14px; }
+  @media (max-width:640px){ .case-arrow{ display:none; } }
+
+  /* ---- ROI calculator ---- */
+  .calc-card{
+    margin-top:36px; background:var(--paper-raised); border:1px solid var(--line); border-radius:14px;
+    padding:40px;
+  }
+  .calc-input-row{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+  .calc-input-row label{ font-size:13px; color:var(--ink-soft); font-weight:600; min-width:130px; }
+  .calc-input-row input[type=range]{ flex:1; min-width:160px; }
+  .calc-spend-value{ font-size:18px; font-weight:600; min-width:110px; text-align:right; }
+  .calc-scale-note{ font-size:12.5px; color:var(--ink-soft); margin-top:10px; }
+  .calc-results{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:32px; padding-top:28px;
+    border-top:1px solid var(--line);
+  }
+  @media (max-width:640px){ .calc-results{ grid-template-columns:repeat(2,1fr); } }
+  .calc-result{ text-align:center; }
+  .calc-num{ font-size:clamp(24px,3vw,32px); font-weight:600; letter-spacing:-0.01em; transition:color .3s ease; }
+  .calc-label{ font-size:12px; color:var(--ink-soft); margin-top:4px; }
+  .calc-revenue{
+    display:flex; gap:40px; justify-content:center; margin-top:28px; padding-top:28px;
+    border-top:1px solid var(--line); flex-wrap:wrap;
+  }
+  .calc-big{ font-size:clamp(30px,4.5vw,42px); font-weight:600; color:var(--gold-deep); letter-spacing:-0.01em; }
+  .calc-footnote{ font-size:12.5px; color:var(--ink-soft); line-height:1.6; margin-top:28px; max-width:none; }
+  .calc-footnote a{ color:var(--coral); font-weight:600; }
+
+  .calc-net-row{
+    display:flex; gap:40px; justify-content:center; margin-top:20px; padding-top:20px;
+    border-top:1px solid var(--line); flex-wrap:wrap;
+  }
+  .calc-net{ font-size:14px; color:var(--ink-soft); text-align:center; }
+  .calc-net .calc-net-val{ font-size:20px; font-weight:600; margin-left:6px; }
+  .calc-net-val.pos{ color:var(--gold-deep); }
+  .calc-net-val.neg{ color:var(--coral); }
+
+  /* ---- Pricing ---- */
+  .pricing-card{
+    margin-top:36px; background:var(--paper-raised); border:1px solid var(--line); border-radius:14px;
+    padding:44px; display:flex; justify-content:space-between; align-items:center; gap:30px; flex-wrap:wrap;
+  }
+  .price-num{ font-size:clamp(38px,6vw,52px); font-weight:600; letter-spacing:-0.02em; }
+  .price-unit{ font-size:15px; color:var(--ink-soft); margin-top:4px; }
+  .price-includes{ font-size:13.5px; color:var(--ink-soft); margin-top:14px; max-width:34ch; line-height:1.6; }
+
+  /* ---- FAQ ---- */
+  .faq-item{ border-bottom:1px solid var(--line); }
+  .faq-q{
+    width:100%; text-align:left; background:none; border:none; padding:22px 0;
+    display:flex; justify-content:space-between; align-items:center; gap:20px;
+    font-family:inherit; font-size:16px; font-weight:600; color:var(--ink);
+  }
+  .faq-plus{ width:20px; height:20px; flex-shrink:0; position:relative; }
+  .faq-plus::before, .faq-plus::after{
+    content:""; position:absolute; background:var(--gold-deep); top:50%; left:50%;
+    transition:transform .35s cubic-bezier(.2,.8,.2,1);
+  }
+  .faq-plus::before{ width:14px; height:2px; transform:translate(-50%,-50%); }
+  .faq-plus::after{ width:2px; height:14px; transform:translate(-50%,-50%); }
+  .faq-item.open .faq-plus::after{ transform:translate(-50%,-50%) rotate(90deg); opacity:0; }
+  .faq-a{ max-height:0; overflow:hidden; transition:max-height .45s cubic-bezier(.2,.8,.2,1); }
+  .faq-item.open .faq-a{ max-height:200px; }
+  .faq-a p{ margin:0 0 22px; font-size:14.5px; line-height:1.65; color:var(--ink-soft); max-width:56ch; }
+
+  /* ---- Final CTA ---- */
+  .final-cta{ text-align:center; padding:100px 28px; }
+  .final-cta h2{ margin:0 auto 16px; max-width:14ch; }
+  .final-cta p.lead{ margin:0 auto 30px; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-brand">
+    <svg class="nav-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="var(--ink)"/>
+      <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+    </svg>
+    <span class="nav-word">Social<span class="em">+Sum</span><span class="dot">.</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About us</a>
+    <a href="service.html">Service</a>
+    <a href="blog.html">Blog</a>
+  </div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <a href="book-a-call.html" class="btn btn-primary btn-sm">Book a call</a>
+    <a href="start.html" class="btn btn-sm btn-gold">Onboard</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-blob blob-gold"></div>
+  <div class="hero-blob blob-coral"></div>
+
+  <svg class="hero-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="48" fill="var(--ink)"/>
+    <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle class="dot" cx="72" cy="26" r="5" fill="var(--coral)"/>
+  </svg>
+
+  <h1>Your referrals still work. This is what happens when they don't<span class="dot">.</span></h1>
+  <p class="sub">We build and run a second, owned pipeline of pre-qualified design enquiries alongside your referral network, so growth stops depending on who happens to recommend you next.</p>
+
+  <div class="hero-ctas">
+    <a href="book-a-call.html" class="btn btn-primary">Book a discovery call <span class="dot">·</span></a>
+    <a href="#mechanism" class="btn btn-ghost">See how it works</a>
+  </div>
+  <div class="hero-fine">90 days · £3,000 · your ad spend, your control</div>
+</header>
+
+<main>
+
+  <section class="block dark-block" id="problem">
+    <div class="wrap">
+    <div class="reveal">
+      <div class="kicker">The problem</div>
+      <h2 style="color:var(--paper);">Word of mouth doesn't come with a forecast<span class="dot">.</span></h2>
+      <p class="lead ink-soft-on-dark" style="margin-top:14px;">See which of these you recognise.</p>
+    </div>
+
+    <div class="problem-cards">
+      <div class="problem-card reveal">
+        <div class="problem-icon-wrap"><svg class="problem-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect x="18" y="24" width="64" height="58" rx="8" fill="none" stroke="var(--ink)" stroke-width="7"/>
+          <line x1="18" y1="42" x2="82" y2="42" stroke="var(--ink)" stroke-width="7"/>
+          <line x1="34" y1="14" x2="34" y2="30" stroke="var(--ink)" stroke-width="7" stroke-linecap="round"/>
+          <line x1="66" y1="14" x2="66" y2="30" stroke="var(--ink)" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="74" cy="66" r="6" fill="var(--coral)"/>
+        </svg></div>
+        <h3>The quiet quarter</h3>
+        <p>No warning. No lever to pull. Just... quiet.</p>
+        <div class="problem-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Sounds familiar</div>
+      </div>
+      <div class="problem-card reveal reveal-d1">
+        <div class="problem-icon-wrap"><svg class="problem-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="28" r="14" fill="none" stroke="var(--ink)" stroke-width="7"/>
+          <path d="M22 82 C22 60 34 52 50 52 C66 52 78 60 78 82" fill="none" stroke="var(--ink)" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="78" cy="62" r="6" fill="var(--coral)"/>
+        </svg></div>
+        <h3>You, doing new business</h3>
+        <p>The most expensive person in the business, doing the job a system should be doing.</p>
+        <div class="problem-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Sounds familiar</div>
+      </div>
+      <div class="problem-card reveal reveal-d2">
+        <div class="problem-icon-wrap"><svg class="problem-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 40 L32 60 L46 34 L60 66 L74 30 L88 50" fill="none" stroke="var(--ink)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="88" cy="50" r="6" fill="var(--coral)"/>
+        </svg></div>
+        <h3>Unpredictable pipeline</h3>
+        <p>Great months and dead months, and no way to tell which one's coming next.</p>
+        <div class="problem-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Sounds familiar</div>
+      </div>
+      <div class="problem-card reveal reveal-d3">
+        <div class="problem-icon-wrap"><svg class="problem-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="42" cy="42" r="24" fill="none" stroke="var(--ink)" stroke-width="7"/>
+          <line x1="60" y1="60" x2="82" y2="82" stroke="var(--ink)" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="74" cy="24" r="6" fill="var(--coral)"/>
+        </svg></div>
+        <h3>Flying blind</h3>
+        <p>No real idea which channel, which message, or which lead actually turned into a client.</p>
+        <div class="problem-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Sounds familiar</div>
+      </div>
+    </div>
+
+    </div>
+  </section>
+
+  <section class="block wrap" id="mechanism">
+    <div class="reveal">
+      <div class="kicker">The mechanism</div>
+      <h2>Four layers, working as one system<span class="dot">.</span></h2>
+      <p class="lead">Not "we run your ads." Social<span class="em">+Sum</span> is acquisition, infrastructure and sales process, built to work together.</p>
+    </div>
+
+    <div class="swipe-wrap">
+      <div class="swipe-track" data-swipe id="mechTrack">
+        <div class="swipe-card reveal">
+          <svg class="card-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <g transform="rotate(270 50 50)">
+              <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--ink)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <circle cx="26" cy="24" r="6" fill="var(--coral)"/>
+          </svg>
+          <h3>Creative</h3>
+          <p>You provide your branding and a selection of images, we create the ad assets: on-brand, and built to perform, not just look good.</p>
+        </div>
+        <div class="swipe-card reveal reveal-d1">
+          <svg class="card-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--ink)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+          </svg>
+          <h3>Acquisition</h3>
+          <p>Meta campaigns with qualification built into the lead form itself, filtering for fit before a single enquiry reaches you.</p>
+        </div>
+        <div class="swipe-card reveal reveal-d2">
+          <svg class="card-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <g transform="rotate(90 50 50)">
+              <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--ink)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <circle cx="74" cy="76" r="6" fill="var(--coral)"/>
+          </svg>
+          <h3>Infrastructure</h3>
+          <p>A CRM that responds the moment a lead comes in, with automated follow-up, reminders and reactivation, so nothing goes cold waiting on you.</p>
+        </div>
+        <div class="swipe-card reveal reveal-d3">
+          <svg class="card-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <g transform="rotate(180 50 50)">
+              <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--ink)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <circle cx="26" cy="76" r="6" fill="var(--coral)"/>
+          </svg>
+          <h3>Sales process</h3>
+          <p>Qualification frameworks and consultation scripts, drawn from five years running sales funnels, so the leads that come in actually convert.</p>
+        </div>
+      </div>
+      <div class="drag-bar-track"><div class="drag-bar-thumb" id="mechDragThumb"></div></div>
+      <div class="swipe-hint">
+        Drag to explore
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 6L15 12L9 18" stroke="var(--ink-soft)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="block dark-block" id="guarantee">
+    <div class="wrap">
+      <div class="reveal">
+        <div class="kicker">The guarantee</div>
+        <h2 style="color:var(--paper);">Guaranteed on what we control. Named honestly on what we don't<span class="dot">.</span></h2>
+      </div>
+      <div class="guarantee-box reveal reveal-d1">
+        <svg class="guarantee-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <g transform="rotate(270 50 50)">
+            <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <circle cx="26" cy="24" r="6" fill="var(--coral)"/>
+        </svg>
+        <div>
+          <p>Your cost per qualified opportunity is capped from day one, agreed in writing before you sign. If it ever runs above that ceiling, we keep optimising the campaigns at no extra cost to you until it's back under the cap, provided leads are followed up within the agreed window on your end. You never pay more than the agreed rate for a qualified opportunity.</p>
+          <p class="small">We don't guarantee closed sales, because that comes down to your consultation and pricing, not our ad account. We say so plainly before you sign, not after, so there are no surprises later.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block wrap" id="calculator">
+    <div class="reveal">
+      <div class="kicker">The maths</div>
+      <h2>Estimate your return<span class="dot">.</span></h2>
+      <p class="lead">Built on the base case: realistic cost per lead and conversion rates for the funnel, not the best or worst end of the range.</p>
+    </div>
+    <div class="calc-card reveal reveal-d1">
+      <div class="calc-input-row">
+        <label for="calcSpend">Monthly ad spend</label>
+        <input type="range" class="timeline-slider" id="calcSpend" min="500" max="5000" step="100" value="2000">
+        <div class="calc-spend-value">£<span id="calcSpendVal">2,000</span>/mo</div>
+      </div>
+      <div class="calc-results">
+        <div class="calc-result"><div class="calc-num" id="calcLeads">240</div><div class="calc-label">Leads in 90 days</div></div>
+        <div class="calc-result"><div class="calc-num" id="calcQualified">84</div><div class="calc-label">Qualified opportunities</div></div>
+        <div class="calc-result"><div class="calc-num" id="calcQuotes">46</div><div class="calc-label">Quotes</div></div>
+        <div class="calc-result"><div class="calc-num" id="calcCustomers">12</div><div class="calc-label">Customers</div></div>
+      </div>
+      <div class="calc-net-row">
+        <div class="calc-net">Cash outlay, 90 days (ads + fee)<span class="calc-net-val" id="calcOutlay">£9,000</span></div>
+      </div>
+      <p class="calc-footnote"><a href="book-a-call.html">Talk through your own numbers →</a></p>
+    </div>
+  </section>
+
+  <section class="block wrap" id="pricing">
+    <div class="reveal">
+      <div class="kicker">Pricing</div>
+      <h2>One fee, spread over three months<span class="dot">.</span></h2>
+    </div>
+    <div class="pricing-card reveal reveal-d1">
+      <div>
+        <div class="price-num">£1,000<span class="price-unit" style="display:inline;font-size:15px;">/month</span></div>
+        <div class="price-unit">£3,000 total for the full 90-day build and management, billed monthly</div>
+        <div class="price-includes">Plus £500–£2,000/month ad spend, paid directly to Meta — we never touch it. Compare that to hiring separately for paid ads, CRM and sales process.</div>
+      </div>
+      <a href="service.html#pricing" class="btn btn-primary">See full pricing &amp; process</a>
+    </div>
+  </section>
+
+  <section class="block wrap" id="faq">
+    <div class="reveal">
+      <div class="kicker">Before you ask</div>
+      <h2>The honest answers<span class="dot">.</span></h2>
+    </div>
+    <div style="margin-top:24px;">
+      <div class="faq-item reveal">
+        <button class="faq-q"><span>"We've always relied on referrals."</span><span class="faq-plus"></span></button>
+        <div class="faq-a"><p>That's exactly the strength this adds to, not replaces — a second channel alongside it, not instead of it.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q"><span>"We've tried Facebook ads before."</span><span class="faq-plus"></span></button>
+        <div class="faq-a"><p>What usually fails isn't the ads — it's running them without qualification or a follow-up system behind them. That's the gap this fills.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q"><span>"£3,000 is expensive."</span><span class="faq-plus"></span></button>
+        <div class="faq-a"><p>One project at your average value covers it. It's priced against what one extra client is worth to you, not a freelancer's day rate.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q"><span>"Can you guarantee we'll get clients?"</span><span class="faq-plus"></span></button>
+        <div class="faq-a"><p>No, and we'd be cautious of anyone who does, because closing depends on your consultation, not our ad account. What's guaranteed is the cost of getting a qualified opportunity in front of you.</p></div>
+      </div>
+    </div>
+    <div class="reveal reveal-d1" style="margin-top:20px;">
+      <a href="faq.html">Got questions about how the service actually works? →</a>
+    </div>
+  </section>
+
+  <!-- Case studies section hidden until real results are in. Remove this comment (and the closing one below) to bring it back. -->
+  <!--
+  <section class="block wrap" id="case-studies">
+    <div class="reveal">
+      <div class="kicker">Case studies</div>
+      <h2>Proof, as it happens<span class="dot">.</span></h2>
+      <p class="lead">The founding cohort is only just starting, so there's nothing real to show yet. These are placeholders for how case studies will read once the first 90-day cycles complete.</p>
+    </div>
+    <div class="case-carousel reveal reveal-d1">
+      <button class="case-arrow case-arrow-prev" aria-label="Previous case study" data-case-nav="-1">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 6L9 12L15 18" stroke="var(--paper)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="case-track" data-swipe id="caseTrack">
+        <article class="case-card">
+          <div class="case-thumb">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="72" cy="26" r="6" fill="var(--coral)"/></svg>
+            <span class="case-soon">Placeholder</span>
+          </div>
+          <div class="case-body">
+            <div class="case-tag">Coming soon</div>
+            <h3>Case study 01</h3>
+            <p>First founding-cohort result lands here once a 90-day cycle completes and the numbers are in.</p>
+            <a href="case-studies.html#case-1" class="case-more">See details →</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <div class="case-thumb">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(90 50 50)"><polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></g><circle cx="74" cy="76" r="6" fill="var(--coral)"/></svg>
+            <span class="case-soon">Placeholder</span>
+          </div>
+          <div class="case-body">
+            <div class="case-tag">Coming soon</div>
+            <h3>Case study 02</h3>
+            <p>Reserved for the second client's story: their starting point, the mechanism in practice, and what changed.</p>
+            <a href="case-studies.html#case-2" class="case-more">See details →</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <div class="case-thumb">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(180 50 50)"><polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></g><circle cx="26" cy="76" r="6" fill="var(--coral)"/></svg>
+            <span class="case-soon">Placeholder</span>
+          </div>
+          <div class="case-body">
+            <div class="case-tag">Coming soon</div>
+            <h3>Case study 03</h3>
+            <p>Reserved for a studio's cost-per-qualified-opportunity, before and after the second pipeline went live.</p>
+            <a href="case-studies.html#case-3" class="case-more">See details →</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <div class="case-thumb">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(270 50 50)"><polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></g><circle cx="26" cy="24" r="6" fill="var(--coral)"/></svg>
+            <span class="case-soon">Placeholder</span>
+          </div>
+          <div class="case-body">
+            <div class="case-tag">Coming soon</div>
+            <h3>Case study 04</h3>
+            <p>Reserved for a studio that started sceptical about paid social, and what changed their mind.</p>
+            <a href="case-studies.html#case-4" class="case-more">See details →</a>
+          </div>
+        </article>
+      </div>
+      <button class="case-arrow case-arrow-next" aria-label="Next case study" data-case-nav="1">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 6L15 12L9 18" stroke="var(--paper)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+  -->
+
+  <section class="block wrap" id="home-contact">
+    <div class="reveal home-contact-hero">
+      <div class="kicker">Get in touch</div>
+      <h2 style="margin:0 auto 18px;">Type it out, we'll take it from there<span class="dot">.</span></h2>
+      <p class="lead">Questions, ideas, or just want to say hello before booking a call — leave your details and message below.</p>
+    </div>
+    <div class="contact-panel reveal reveal-d1">
+      <form id="homeContactForm">
+        <div class="contact-field">
+          <label for="hcName">Your name</label>
+          <input type="text" id="hcName" name="name" required>
+        </div>
+        <div class="contact-field">
+          <label for="hcEmail">Your email</label>
+          <input type="email" id="hcEmail" name="email" required>
+        </div>
+        <div class="contact-field">
+          <label for="hcMessage">Message</label>
+          <textarea id="hcMessage" name="message" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary contact-submit">Send message <span class="dot">·</span></button>
+      </form>
+      <p class="contact-note">Submissions go straight to our inbox.</p>
+      <p class="contact-status" id="homeContactStatus">Thank you — someone from the team will get back to you shortly.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div style="display:flex; align-items:center; gap:22px;">
+    <div class="footer-brand">
+      <svg class="footer-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+      </svg>
+      <span>Social<span class="em">+Sum</span><span class="dot">.</span></span>
+    </div>
+    <div class="footer-social">
+      <a href="https://www.instagram.com/socialandsum" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="footer-actions">
+    <a href="faq.html" class="btn btn-sm btn-gold">FAQ</a>
+    <a href="contact.html" class="btn btn-sm footer-email">Email us</a>
+    <a href="book-a-call.html" class="btn btn-sm footer-cta">Book a call <span class="dot">·</span></a>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+<script>
+(function(){
+  var reduced = window.__ssReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Mechanism swipe-track drag bar */
+  var mechTrack = document.getElementById('mechTrack');
+  var mechThumb = document.getElementById('mechDragThumb');
+  if (mechTrack && mechThumb){
+    function updateMechBar(){
+      var trackW = mechTrack.scrollWidth;
+      var visible = mechTrack.clientWidth;
+      var pct = Math.min(100, (visible / trackW) * 100);
+      mechThumb.style.width = pct + '%';
+      var maxScroll = trackW - visible;
+      var scrolled = maxScroll > 0 ? (mechTrack.scrollLeft / maxScroll) : 0;
+      mechThumb.style.left = (scrolled * (100 - pct)) + '%';
+    }
+    mechTrack.addEventListener('scroll', updateMechBar);
+    window.addEventListener('resize', updateMechBar);
+    updateMechBar();
+  }
+
+  /* Problem-section cards pop one after another, once, when scrolled into view */
+  var problemSection = document.getElementById('problem');
+  if (problemSection && !reduced && 'IntersectionObserver' in window){
+    var problemCards = problemSection.querySelectorAll('.problem-card');
+    var problemPlayed = false;
+    var problemObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting && !problemPlayed){
+          problemPlayed = true;
+          problemCards.forEach(function(card, i){
+            setTimeout(function(){ card.classList.add('pop'); }, i * 320);
+          });
+          problemObs.disconnect();
+        }
+      });
+    }, { threshold: 0.45 });
+    problemObs.observe(problemSection);
+  }
+
+  /* Case-study carousel arrows */
+  var caseTrack = document.getElementById('caseTrack');
+  if (caseTrack){
+    document.querySelectorAll('[data-case-nav]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var card = caseTrack.querySelector('.case-card');
+        var step = card ? card.getBoundingClientRect().width + 20 : 300;
+        caseTrack.scrollBy({ left: step * Number(btn.dataset.caseNav), behavior: reduced ? 'auto' : 'smooth' });
+      });
+    });
+  }
+
+  /* Hero blob parallax */
+  if (!reduced){
+    var blobs = document.querySelectorAll('.hero-blob');
+    window.addEventListener('mousemove', function(e){
+      var nx = (e.clientX/innerWidth - 0.5), ny = (e.clientY/innerHeight - 0.5);
+      blobs.forEach(function(b,i){
+        var f = i===0 ? 18 : -14;
+        b.style.transform = 'translate('+(nx*f)+'px,'+(ny*f)+'px)';
+      });
+    });
+  }
+
+  /* ROI calculator — base-case assumptions */
+  var calcSpend = document.getElementById('calcSpend');
+  if (calcSpend){
+    var fmt = function(n){ return Math.round(n).toLocaleString('en-GB'); };
+    var BASE = { cpl:25, qualify:0.35, quote:0.55, close:0.25 };
+
+    function updateCalc(){
+      var monthly = Number(calcSpend.value);
+      calcSpend.style.setProperty('--fill', ((monthly-500)/(5000-500)*100)+'%');
+      document.getElementById('calcSpendVal').textContent = fmt(monthly);
+
+      var totalSpend = monthly * 3; // 90 days
+      var leads = totalSpend / BASE.cpl;
+      var qualified = leads * BASE.qualify;
+      var quotes = qualified * BASE.quote;
+      var customers = quotes * BASE.close;
+      var outlay = totalSpend + 3000; // ad spend + flat £3,000 fee across 90 days
+
+      document.getElementById('calcLeads').textContent = fmt(leads);
+      document.getElementById('calcQualified').textContent = fmt(qualified);
+      document.getElementById('calcQuotes').textContent = fmt(quotes);
+      document.getElementById('calcCustomers').textContent = '~' + fmt(customers);
+      document.getElementById('calcOutlay').textContent = '£'+fmt(outlay);
+    }
+    calcSpend.addEventListener('input', updateCalc);
+    updateCalc();
+  }
+
+  /* FAQ accordion */
+  document.querySelectorAll('.faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btn.parentElement.classList.toggle('open');
+    });
+  });
+
+  /* Homepage contact form — sent via a Netlify Function (server-side), not EmailJS from
+     the browser, so there's no client-side API key or size/plan limits to work around. */
+  var homeForm = document.getElementById('homeContactForm');
+  if (homeForm){
+    var homeStatus = document.getElementById('homeContactStatus');
+
+    homeForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = document.getElementById('hcName').value.trim();
+      var email = document.getElementById('hcEmail').value.trim();
+      var message = document.getElementById('hcMessage').value.trim();
+
+      fetch('/api/send-contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, email: email, message: message })
+      }).catch(function(){ /* still show thanks — see contact-note fallback */ });
+      homeForm.reset();
+      homeStatus.classList.add('show');
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

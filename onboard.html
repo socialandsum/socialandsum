@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Onboarding — Social + Sum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .portal-topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px; border-bottom:1px solid var(--line);
+  }
+  .portal-topbar .nav-brand{ display:flex; align-items:center; gap:10px; }
+  .portal-topbar .nav-mark{ width:28px; height:28px; }
+  .portal-topbar .nav-word{ font-size:15px; font-weight:600; letter-spacing:-0.01em; }
+  .portal-tag{
+    font-size:11px; letter-spacing:0.06em; text-transform:uppercase; font-weight:600;
+    color:var(--ink-soft); border:1px solid var(--line); border-radius:100px; padding:5px 12px;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .portal-tag svg{ width:12px; height:12px; }
+
+  .progress-rail{ max-width:640px; margin:36px auto 0; padding:0 28px; }
+  .progress-track{ display:flex; align-items:center; gap:6px; }
+  .progress-seg{ flex:1; height:4px; border-radius:100px; background:var(--line); overflow:hidden; }
+  .progress-seg span{ display:block; height:100%; width:0%; background:var(--gold-deep); transition:width .4s ease; }
+  .progress-labels{ display:flex; justify-content:space-between; margin-top:8px; font-size:11.5px; color:var(--ink-soft); letter-spacing:0.02em; }
+  .progress-labels span.active{ color:var(--gold-deep); font-weight:600; }
+
+  .onb-wrap{ max-width:640px; margin:30px auto 100px; padding:0 28px; }
+  .onb-panel{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:14px;
+    padding:40px;
+  }
+  .onb-step{ display:none; }
+  .onb-step.active{ display:block; }
+  .onb-panel h3{ font-size:20px; font-weight:600; margin:0 0 8px; }
+  .onb-panel p.step-lead{ font-size:14px; color:var(--ink-soft); line-height:1.6; margin:0 0 26px; max-width:48ch; }
+
+  .field{ margin-bottom:18px; }
+  .field label{ display:block; font-size:13px; font-weight:600; color:var(--ink-soft); margin-bottom:8px; }
+  .field input, .field select{
+    width:100%; font-family:inherit; font-size:15px; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line); border-radius:8px;
+    padding:12px 14px; outline:none; transition:border-color .25s ease;
+  }
+  .field input:focus, .field select:focus{ border-color:var(--gold-deep); }
+  .field-row{ display:flex; gap:14px; }
+  .field-row .field{ flex:1; }
+  .field.field-error input{ border-color:var(--coral); box-shadow:0 0 0 3px rgba(224,105,84,0.12); }
+  .field.field-error label{ color:var(--coral); }
+  @keyframes field-shake{ 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-6px); } 75%{ transform:translateX(6px); } }
+  .field.field-error{ animation:field-shake .35s ease; }
+
+  .onb-modal-overlay{
+    position:fixed; inset:0; background:rgba(22,34,43,0.55); z-index:300;
+    display:flex; align-items:center; justify-content:center; padding:20px;
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .onb-modal-overlay.show{ opacity:1; pointer-events:auto; }
+  .onb-modal-box{
+    background:var(--paper); border-radius:14px; padding:36px 32px; max-width:360px; text-align:center;
+    box-shadow:var(--shadow); transform:translateY(10px); transition:transform .25s ease;
+  }
+  .onb-modal-overlay.show .onb-modal-box{ transform:translateY(0); }
+  .onb-modal-icon{ width:44px; height:44px; margin:0 auto 16px; }
+  .onb-modal-box h3{ font-size:18px; font-weight:600; margin:0 0 10px; }
+  .onb-modal-box p{ font-size:14px; line-height:1.6; color:var(--ink-soft); margin:0 0 22px; }
+  .onb-modal-box .btn{ width:100%; }
+
+  .legal-box{
+    background:var(--paper); border:1px solid var(--line); border-radius:10px;
+    padding:18px 20px; max-height:260px; overflow-y:auto;
+    font-size:13px; line-height:1.7; color:var(--ink-soft); margin-bottom:20px;
+  }
+  .legal-box h5{ font-size:13px; font-weight:600; color:var(--ink); margin:16px 0 6px; }
+  .legal-box h5:first-child{ margin-top:0; }
+  .legal-box ul{ margin:0 0 10px; padding-left:18px; }
+  .legal-box li{ margin-bottom:4px; }
+  .legal-note{
+    display:flex; gap:8px; font-size:12px; color:var(--gold-deep); background:rgba(217,164,65,0.14);
+    border-radius:8px; padding:10px 12px; margin-bottom:16px; line-height:1.55;
+  }
+  .legal-note svg{ width:15px; height:15px; flex:none; margin-top:1px; }
+
+  .consent-row{ display:flex; align-items:flex-start; gap:10px; margin-bottom:18px; }
+  .consent-row input[type="checkbox"]{ width:18px; height:18px; margin-top:1px; accent-color:var(--gold-deep); flex:none; }
+  .consent-row label{ font-size:13.5px; line-height:1.55; color:var(--ink); }
+
+  .sig-field{
+    border:1px dashed var(--line); border-radius:10px; padding:16px 18px; margin-bottom:8px;
+  }
+  .sig-field label{ display:block; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:8px; }
+  .sig-field input{
+    width:100%; font-family:'Newsreader',serif; font-style:italic; font-size:22px; color:var(--ink);
+    background:transparent; border:none; border-bottom:1px solid var(--line); padding:6px 2px; outline:none;
+  }
+  .sig-field .sig-meta{ font-size:11.5px; color:var(--ink-soft); margin-top:8px; }
+
+  .sig-pad-label{ display:block; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:8px; }
+  .sig-canvas-wrap{
+    position:relative; border:1px solid var(--line); border-radius:8px; background:var(--paper);
+  }
+  .sig-canvas{ display:block; width:100%; height:140px; touch-action:none; cursor:crosshair; border-radius:8px; }
+  .sig-canvas-placeholder{
+    position:absolute; top:50%; left:16px; transform:translateY(-50%);
+    font-size:13px; color:var(--ink-soft); pointer-events:none; font-family:'Newsreader',serif; font-style:italic;
+  }
+  .sig-pad-row{ display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
+  .sig-clear{ font-size:11.5px; color:var(--ink-soft); text-decoration:underline; cursor:pointer; background:none; border:none; font-family:inherit; padding:0; }
+  .sig-clear:hover{ color:var(--gold-deep); }
+
+  .step-actions{ display:flex; justify-content:space-between; align-items:center; margin-top:28px; gap:12px; }
+  .step-actions .btn-ghost{ font-size:13.5px; }
+  .btn-notready.btn-ready{ opacity:1; }
+  .btn-notready{ opacity:0.5; }
+
+  .review-list{ font-size:13.5px; color:var(--ink); margin-bottom:24px; }
+  .review-list dt{ color:var(--ink-soft); font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em; margin-top:14px; }
+  .review-list dt:first-child{ margin-top:0; }
+  .review-list dd{ margin:3px 0 0; font-weight:500; }
+
+  .submit-note{ font-size:12.5px; color:var(--ink-soft); text-align:center; margin-top:16px; line-height:1.6; }
+
+  .done-panel{ text-align:center; }
+  .done-icon{ width:52px; height:52px; margin:0 auto 18px; display:block; }
+  .done-panel h3{ margin-bottom:12px; }
+  .done-panel p{ font-size:14.5px; color:var(--ink-soft); line-height:1.65; max-width:44ch; margin:0 auto 24px; }
+
+  .pay-options-inline{ display:flex; gap:14px; flex-wrap:wrap; margin-top:14px; }
+  .pay-option-card{
+    flex:1 1 200px; border:1px solid var(--line); border-radius:10px; padding:20px 18px;
+    text-align:center; background:var(--paper);
+  }
+  .pay-option-card .pay-opt-price{ font-size:13px; color:var(--gold-deep); font-weight:600; margin:2px 0 12px; }
+  .pay-option-card h4{ font-size:14.5px; font-weight:600; margin:0; }
+  .pay-secure-inline{ display:flex; align-items:center; justify-content:center; gap:8px; font-size:12px; color:var(--ink-soft); margin-top:16px; }
+  .pay-secure-inline svg{ width:14px; height:14px; }
+</style>
+</head>
+<body>
+
+<div class="portal-topbar">
+  <a class="nav-brand" href="index.html" style="text-decoration:none; color:inherit;">
+    <svg class="nav-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="var(--ink)"/>
+      <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+    </svg>
+    <span class="nav-word">Social<span class="em">+Sum</span><span class="dot">.</span></span>
+  </a>
+  <span class="portal-tag">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    Private client area
+  </span>
+</div>
+
+<div class="progress-rail">
+  <div class="progress-track">
+    <div class="progress-seg"><span id="seg1"></span></div>
+    <div class="progress-seg"><span id="seg2"></span></div>
+    <div class="progress-seg"><span id="seg3"></span></div>
+    <div class="progress-seg"><span id="seg4"></span></div>
+  </div>
+  <div class="progress-labels">
+    <span id="lbl1">Your details</span>
+    <span id="lbl2">Terms</span>
+    <span id="lbl3">Guarantee</span>
+    <span id="lbl4">Review</span>
+  </div>
+</div>
+
+<div class="onb-wrap">
+  <div class="onb-panel">
+
+    <!-- STEP 1: DETAILS -->
+    <section class="onb-step active" id="step1">
+      <h3>Your details</h3>
+      <p class="step-lead">So we can set up your account and get the right paperwork in your name.</p>
+      <div class="field">
+        <label for="fStudio">Business name</label>
+        <input type="text" id="fStudio" required>
+      </div>
+      <div class="field">
+        <label for="fName">Your full name</label>
+        <input type="text" id="fName" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="fEmail">Email</label>
+          <input type="email" id="fEmail" required>
+        </div>
+        <div class="field">
+          <label for="fPhone">Phone</label>
+          <input type="tel" id="fPhone">
+        </div>
+      </div>
+      <div class="step-actions">
+        <span></span>
+        <button type="button" class="btn btn-primary" onclick="detailsContinueClick()">Continue <span class="dot">·</span></button>
+      </div>
+    </section>
+
+    <!-- STEP 2: TERMS OF SERVICE -->
+    <section class="onb-step" id="step2">
+      <h3>Terms of Service</h3>
+      <p class="step-lead">Please read through, then sign below.</p>
+      <div class="legal-box">
+        <p>These Terms of Service (&quot;Terms&quot;) apply to services provided by Social + Sum (&quot;Social + Sum&quot;, &quot;we&quot;, &quot;us&quot; or &quot;our&quot;) to the person or business purchasing our services (&quot;Client&quot;, &quot;you&quot; or &quot;your&quot;).</p>
+        <p>By accepting a proposal, order form, statement of work, invoice or other written confirmation for our services, you agree to these Terms.</p>
+        <p>The proposal or order form issued to you will set out the specific commercial terms of your engagement, including the services, fees, payment schedule, engagement period, advertising budget and any specific guarantee offered.</p>
+        <h5>Agreement Structure</h5>
+        <p>The agreement between Social + Sum and the Client consists of:</p>
+        <ul>
+          <li>these Terms of Service;</li>
+          <li>the applicable proposal, order form or statement of work;</li>
+          <li>any separate guarantee document agreed between the parties;</li>
+          <li>the Data Processing Agreement contained in these Terms where applicable; and</li>
+          <li>any other document expressly incorporated into the agreement.</li>
+        </ul>
+        <p>If there is a conflict between these documents:</p>
+        <ul>
+          <li>the proposal or order form will take precedence in relation to fees, payment dates, scope, engagement period and other commercial terms;</li>
+          <li>a separate guarantee document will take precedence in relation to the specific guarantee;</li>
+          <li>the Data Processing Agreement will take precedence in relation to the processing of personal data; and</li>
+          <li>these Terms will apply to all other matters.</li>
+        </ul>
+        <p>No verbal statement or informal conversation will amend the agreement unless confirmed in writing.</p>
+        <h5>Services</h5>
+        <p>Social + Sum provides client acquisition, marketing, CRM and sales-process services.</p>
+        <p>Depending on the services agreed, this may include:</p>
+        <ul>
+          <li>client acquisition strategy;</li>
+          <li>paid advertising strategy and campaign management;</li>
+          <li>Meta advertising setup, management and optimisation;</li>
+          <li>campaign targeting and testing;</li>
+          <li>advertising creative and copy;</li>
+          <li>lead generation;</li>
+          <li>lead qualification;</li>
+          <li>CRM setup and configuration;</li>
+          <li>CRM pipelines;</li>
+          <li>automated email and SMS workflows;</li>
+          <li>lead nurturing;</li>
+          <li>appointment and consultation workflows;</li>
+          <li>lead reactivation;</li>
+          <li>sales-process consulting;</li>
+          <li>pipeline development and optimisation;</li>
+          <li>reporting and performance analysis; and</li>
+          <li>strategic recommendations relating to customer acquisition.</li>
+        </ul>
+        <p>The exact services included in the Client&#39;s engagement will be set out in the applicable proposal or order form.</p>
+        <p>Anything not expressly included in the agreed scope is outside the scope of the services.</p>
+        <h5>Scope of Work</h5>
+        <p>Social + Sum is responsible only for the deliverables expressly included in the agreed scope.</p>
+        <p>Unless expressly included, the services do not include:</p>
+        <ul>
+          <li>website design or development;</li>
+          <li>full branding or rebranding;</li>
+          <li>photography or videography;</li>
+          <li>extensive graphic design;</li>
+          <li>ongoing social media management;</li>
+          <li>content creation unrelated to the agreed campaigns;</li>
+          <li>sales appointment attendance;</li>
+          <li>sales closing;</li>
+          <li>preparation of Client quotations;</li>
+          <li>customer service;</li>
+          <li>fulfilment of the Client&#39;s services;</li>
+          <li>legal, financial or regulatory advice;</li>
+          <li>management of the Client&#39;s employees;</li>
+          <li>management of the Client&#39;s wider business; or</li>
+          <li>any other service not expressly included in writing.</li>
+        </ul>
+        <p>Social + Sum is not required to undertake additional work merely because that work is related to the Client&#39;s marketing or sales activity.</p>
+        <p>Additional work may be quoted separately and will only be undertaken once the Client has approved the additional scope and any applicable fee.</p>
+        <h5>Meetings, Communication and Revisions</h5>
+        <p>The proposal or order form may specify the agreed meeting frequency and communication arrangements.</p>
+        <p>Unless otherwise agreed:</p>
+        <ul>
+          <li>meetings will be scheduled in advance;</li>
+          <li>the Client is responsible for attending or providing reasonable notice of cancellation;</li>
+          <li>requests outside the agreed scope may be treated as additional work;</li>
+          <li>creative or campaign revisions will be limited to what is reasonably necessary to deliver the agreed work; and</li>
+          <li>repeated changes to an approved strategy, campaign, offer or creative direction may constitute additional work.</li>
+        </ul>
+        <p>Social + Sum is not required to attend unlimited meetings, respond immediately to every message or provide unlimited revisions as part of the agreed fee.</p>
+        <p>Where a Client-caused delay materially affects delivery, Social + Sum may reasonably adjust the delivery timetable.</p>
+        <h5>Fees and Payment</h5>
+        <p>All fees, payment dates, payment methods and applicable taxes will be stated in the proposal, order form or invoice.</p>
+        <p>The Client agrees to pay fees by the agreed due date.</p>
+        <p>Unless otherwise agreed in writing, work will not begin until any required initial payment has been received and the required onboarding information and access have been provided.</p>
+        <p>Where an invoice becomes overdue, Social + Sum may:</p>
+        <ul>
+          <li>suspend work;</li>
+          <li>pause advertising or other activity where appropriate;</li>
+          <li>withhold delivery of unfinished work;</li>
+          <li>postpone scheduled work;</li>
+          <li>require overdue amounts to be paid before work resumes; and</li>
+          <li>exercise any other rights available under the agreement or applicable law.</li>
+        </ul>
+        <p>Suspension caused by non-payment does not automatically extend the engagement or reduce the fees payable.</p>
+        <p>Where permitted by law, Social + Sum may charge interest on overdue business-to-business invoices at the applicable statutory rate or any other lawful contractual rate stated in the proposal or invoice.</p>
+        <h5>Commitment, Cancellation and Early Termination</h5>
+        <p>The Client&#39;s commitment period will be stated in the proposal or order form.</p>
+        <p>Where the engagement is agreed for a fixed period, the Client remains responsible for the fees agreed for that commitment period unless the agreement expressly provides otherwise.</p>
+        <p>Cancellation of the engagement does not automatically entitle the Client to a refund.</p>
+        <p>Fees relating to work already completed, work already committed, non-refundable third-party costs and any other amounts properly due remain payable following cancellation.</p>
+        <p>If the Client requests early termination of a fixed-term engagement, Social + Sum may accept the termination subject to the commercial terms stated in the proposal or order form.</p>
+        <p>Either party may terminate the agreement where the other party materially breaches the agreement and fails to remedy the breach within a reasonable period following written notice.</p>
+        <p>Social + Sum may terminate the engagement immediately where:</p>
+        <ul>
+          <li>continuing the services would be unlawful;</li>
+          <li>the Client asks Social + Sum to undertake unlawful or misleading activity;</li>
+          <li>the Client materially breaches data protection or advertising requirements;</li>
+          <li>the Client repeatedly fails to provide required access or information;</li>
+          <li>fees remain materially overdue;</li>
+          <li>the Client behaves abusively, threateningly or unreasonably towards Social + Sum; or</li>
+          <li>continued performance would expose Social + Sum to significant legal, regulatory or platform risk.</li>
+        </ul>
+        <p>Termination does not affect rights or obligations that arose before termination.</p>
+        <h5>Refunds</h5>
+        <p>Unless expressly stated otherwise in the proposal or order form, fees for completed services are non-refundable.</p>
+        <p>A refund will not be due merely because:</p>
+        <ul>
+          <li>advertising performance does not meet the Client&#39;s expectations;</li>
+          <li>the Client does not convert an enquiry into a customer;</li>
+          <li>the Client does not respond to leads;</li>
+          <li>the Client changes its strategy;</li>
+          <li>the Client changes its mind about the service;</li>
+          <li>the Client does not implement recommendations; or</li>
+          <li>the Client&#39;s business circumstances change.</li>
+        </ul>
+        <p>Any specific refund or service-credit arrangement must be expressly agreed in writing.</p>
+        <h5>Client Responsibilities</h5>
+        <p>The Client agrees to provide all information, materials, access and cooperation reasonably required to deliver the services.</p>
+        <p>This may include:</p>
+        <ul>
+          <li>accurate business information;</li>
+          <li>brand information;</li>
+          <li>website access;</li>
+          <li>Meta Business Manager and advertising account access;</li>
+          <li>social media access;</li>
+          <li>CRM access;</li>
+          <li>relevant software access;</li>
+          <li>photography and creative assets;</li>
+          <li>service information;</li>
+          <li>pricing information;</li>
+          <li>project information;</li>
+          <li>target geographic areas;</li>
+          <li>information about ideal customers;</li>
+          <li>consultation availability;</li>
+          <li>historic lead or customer information where lawful;</li>
+          <li>relevant approvals; and</li>
+          <li>information reasonably required to assess campaign performance.</li>
+        </ul>
+        <p>The Client is responsible for ensuring that information supplied to Social + Sum is accurate, complete and lawful.</p>
+        <p>The Client is responsible for responding to leads, conducting consultations, preparing proposals or quotations, following up prospects, closing sales and delivering its services unless expressly agreed otherwise.</p>
+        <h5>Client Response Obligations</h5>
+        <p>Where lead response is relevant to campaign performance or a guarantee, the Client must respond to leads within the response period stated in the applicable proposal or guarantee document.</p>
+        <p>The Client must maintain reasonable availability to receive and respond to enquiries.</p>
+        <p>Where a lead is generated but the Client does not respond within the agreed response period, the lead may cease to qualify for any applicable performance guarantee.</p>
+        <p>Social + Sum is not responsible for lost opportunities caused by delayed or inadequate Client follow-up.</p>
+        <h5>Advertising Accounts and Advertising Spend</h5>
+        <p>Where paid advertising forms part of the services, advertising spend is separate from Social + Sum&#39;s service fees unless expressly stated otherwise.</p>
+        <p>Where possible, advertising spend will be paid directly by the Client to the relevant advertising platform.</p>
+        <p>The Client remains responsible for:</p>
+        <ul>
+          <li>maintaining valid payment details;</li>
+          <li>maintaining access to advertising accounts;</li>
+          <li>complying with platform policies;</li>
+          <li>approving advertising materials where required;</li>
+          <li>ensuring advertised services are available;</li>
+          <li>ensuring advertised prices and claims are accurate; and</li>
+          <li>ensuring that its business is legally able to provide the advertised services.</li>
+        </ul>
+        <p>Social + Sum does not guarantee that an advertising platform will approve, deliver, maintain or continue any particular campaign.</p>
+        <p>Social + Sum is not responsible for advertising account restrictions, suspensions, outages, algorithm changes, policy changes or other platform decisions outside our reasonable control.</p>
+        <h5>Third-Party Platforms</h5>
+        <p>The services may rely on third-party platforms including Meta, CRM systems, email providers, SMS providers, analytics tools, hosting providers and other software.</p>
+        <p>Third-party platforms are controlled by their respective providers.</p>
+        <p>Social + Sum is not responsible for:</p>
+        <ul>
+          <li>platform outages;</li>
+          <li>changes to platform functionality;</li>
+          <li>account restrictions;</li>
+          <li>platform pricing;</li>
+          <li>changes to algorithms;</li>
+          <li>policy changes;</li>
+          <li>technical failures;</li>
+          <li>third-party security incidents; or</li>
+          <li>loss of functionality caused by the third-party provider.</li>
+        </ul>
+        <p>The Client remains responsible for any third-party subscription fees unless otherwise agreed.</p>
+        <h5>Account Ownership</h5>
+        <p>Client-owned accounts remain owned by the Client.</p>
+        <p>Where Social + Sum is granted access to a Client&#39;s advertising account, CRM, website, social media account or other business system, that access is provided solely for the purpose of delivering the agreed services.</p>
+        <p>Social + Sum will not represent itself as the owner of Client accounts.</p>
+        <p>Where Social + Sum creates or configures systems within a Client-owned platform, those systems remain subject to the ownership and licensing terms of that platform.</p>
+        <p>Social + Sum retains ownership of its own pre-existing methodologies, frameworks, templates, systems, processes, know-how and reusable intellectual property.</p>
+        <h5>Intellectual Property</h5>
+        <p>Each party retains ownership of intellectual property it owned before the engagement.</p>
+        <p>Client-supplied materials remain the property of the Client or the relevant rights holder.</p>
+        <p>Subject to payment of all applicable fees, the Client may use bespoke deliverables created specifically for it as part of the agreed services for its own business purposes.</p>
+        <p>Unless expressly agreed otherwise, Social + Sum retains ownership of:</p>
+        <ul>
+          <li>pre-existing templates;</li>
+          <li>campaign frameworks;</li>
+          <li>strategic methodologies;</li>
+          <li>processes;</li>
+          <li>know-how;</li>
+          <li>internal documentation;</li>
+          <li>reusable systems;</li>
+          <li>generic automation structures;</li>
+          <li>general-purpose scripts or templates;</li>
+          <li>working methods; and</li>
+          <li>materials capable of being used across multiple client engagements.</li>
+        </ul>
+        <p>The Client does not acquire ownership of Social + Sum&#39;s underlying methods merely because they are used in delivering the services.</p>
+        <p>Third-party intellectual property remains subject to the relevant third-party licence.</p>
+        <h5>Creative Approval</h5>
+        <p>Where Social + Sum produces advertising copy, campaign messaging, graphics or other creative materials, the Client may be asked to approve those materials before publication.</p>
+        <p>The Client is responsible for confirming the accuracy of business-specific information including:</p>
+        <ul>
+          <li>prices;</li>
+          <li>offers;</li>
+          <li>availability;</li>
+          <li>service descriptions;</li>
+          <li>testimonials;</li>
+          <li>qualifications;</li>
+          <li>claims about previous results;</li>
+          <li>guarantees;</li>
+          <li>geographic availability; and</li>
+          <li>other factual statements about its business.</li>
+        </ul>
+        <p>Social + Sum may refuse to publish material where we reasonably believe it may be misleading, unlawful or contrary to an advertising platform&#39;s policies.</p>
+        <p>Client approval does not remove Social + Sum&#39;s obligation to exercise reasonable professional care.</p>
+        <h5>Client Delays</h5>
+        <p>The Client acknowledges that Social + Sum&#39;s ability to deliver the services depends on timely cooperation.</p>
+        <p>If the Client delays:</p>
+        <ul>
+          <li>providing access;</li>
+          <li>providing assets;</li>
+          <li>approving creative;</li>
+          <li>supplying information;</li>
+          <li>responding to questions;</li>
+          <li>attending required meetings; or</li>
+          <li>completing agreed actions,</li>
+        </ul>
+        <p>Social + Sum may reasonably adjust delivery dates, pause work or reschedule the engagement.</p>
+        <p>Where a delay is substantial, Social + Sum may treat the engagement as suspended until the Client is ready to proceed.</p>
+        <p>Fees already due remain payable during Client-caused delays unless otherwise agreed in writing.</p>
+        <h5>Handover</h5>
+        <p>At the end of the engagement, Social + Sum will provide reasonable handover of Client-owned assets and access required for the Client to continue using the systems created for its business.</p>
+        <p>Handover does not include unlimited training, rebuilding, migration, troubleshooting or ongoing support unless expressly included in the agreed scope.</p>
+        <p>Additional handover, migration or training work may be charged separately.</p>
+        <p>Social + Sum may retain copies of records where reasonably required for legal, accounting, insurance, dispute-resolution or compliance purposes, subject to applicable data protection obligations.</p>
+        <h5>Data Protection</h5>
+        <p>The parties will comply with applicable UK data protection legislation.</p>
+        <p>Where Social + Sum processes personal data on behalf of the Client as a processor, the Data Processing Agreement contained in these Terms will apply.</p>
+        <p>The Client remains responsible for determining:</p>
+        <ul>
+          <li>the purposes for which personal data is processed;</li>
+          <li>the lawful basis for processing;</li>
+          <li>the information provided to individuals;</li>
+          <li>the lawfulness of marketing activity;</li>
+          <li>the accuracy of personal data supplied to Social + Sum; and</li>
+          <li>compliance with applicable marketing laws.</li>
+        </ul>
+        <p>This is particularly relevant where services involve email, SMS, lead reactivation or other direct marketing activity.</p>
+        <p>The Client must not provide Social + Sum with personal data unless it is lawfully entitled to do so.</p>
+        <h5>Marketing Compliance</h5>
+        <p>The Client is responsible for ensuring that its offers, claims, services and business practices comply with applicable laws and regulations.</p>
+        <p>Where Social + Sum creates or operates marketing campaigns using Client information, the Client remains responsible for the underlying accuracy and legality of its business claims.</p>
+        <p>Where personal data is used for direct marketing, the parties will cooperate to ensure that the relevant UK data protection and electronic marketing requirements are addressed.</p>
+        <p>Social + Sum may pause or refuse marketing activity where it reasonably believes the proposed activity may breach applicable law, regulation or platform policy.</p>
+        <h5>Confidentiality</h5>
+        <p>Each party agrees to keep confidential non-public information received from the other party in connection with the engagement.</p>
+        <p>Confidential information may include:</p>
+        <ul>
+          <li>commercial information;</li>
+          <li>financial information;</li>
+          <li>customer information;</li>
+          <li>lead information;</li>
+          <li>marketing strategy;</li>
+          <li>pricing;</li>
+          <li>business processes;</li>
+          <li>passwords and access credentials;</li>
+          <li>unpublished campaign information; and</li>
+          <li>proprietary systems or methods.</li>
+        </ul>
+        <p>Confidential information may only be used for the purposes of the engagement.</p>
+        <p>This obligation does not apply to information that:</p>
+        <ul>
+          <li>is publicly available without breach;</li>
+          <li>was lawfully known before disclosure;</li>
+          <li>is independently developed;</li>
+          <li>is lawfully received from another source; or</li>
+          <li>must be disclosed by law.</li>
+        </ul>
+        <h5>Guarantee</h5>
+        <p>Where a guarantee is included in the Client&#39;s proposal, the guarantee will be governed by the specific guarantee terms agreed between the parties.</p>
+        <p>Unless expressly stated otherwise, a Social + Sum guarantee relates to agreed qualified opportunities, not guaranteed sales, revenue, profit, closed customers or return on advertising spend.</p>
+        <p>A qualified opportunity must meet the qualification criteria agreed for the engagement.</p>
+        <p>These criteria may include:</p>
+        <ul>
+          <li>being within the agreed geographic area;</li>
+          <li>requiring an agreed type of service;</li>
+          <li>meeting agreed project or budget criteria where applicable;</li>
+          <li>providing genuine contact information;</li>
+          <li>demonstrating a genuine business requirement;</li>
+          <li>being a genuine prospective customer rather than spam or a test submission; and</li>
+          <li>being generated through the agreed campaign or acquisition system.</li>
+        </ul>
+        <p>The guarantee does not apply to opportunities that are:</p>
+        <ul>
+          <li>duplicates;</li>
+          <li>spam;</li>
+          <li>fraudulent;</li>
+          <li>test submissions;</li>
+          <li>generated independently of the agreed campaign;</li>
+          <li>outside the agreed geographic or service criteria;</li>
+          <li>already known to the Client before campaign generation;</li>
+          <li>generated because of the Client&#39;s own independent marketing activity;</li>
+          <li>rendered unusable because the Client failed to respond;</li>
+          <li>rendered unusable because the Client failed to attend a consultation;</li>
+          <li>rejected by the Client for reasons unrelated to lead quality;</li>
+          <li>affected by a material change to the Client&#39;s offer, pricing, availability or geographic area; or</li>
+          <li>affected by a platform failure, restriction or event outside Social + Sum&#39;s reasonable control.</li>
+        </ul>
+        <p>The Client must provide reasonable evidence required to determine whether an opportunity qualifies.</p>
+        <p>Evidence may include CRM records, enquiry forms, call records, appointment records, email records, campaign data and other relevant information.</p>
+        <p>Social + Sum may reasonably request access to relevant records where required to assess a guarantee claim.</p>
+        <p>The Client must meet all obligations stated in the applicable guarantee, including any requirements relating to:</p>
+        <ul>
+          <li>lead response;</li>
+          <li>consultation availability;</li>
+          <li>advertising spend;</li>
+          <li>access;</li>
+          <li>approvals;</li>
+          <li>campaign continuity;</li>
+          <li>sales follow-up; and</li>
+          <li>provision of information.</li>
+        </ul>
+        <p>If the agreed guarantee conditions are satisfied and the agreed performance threshold is not achieved, the remedy will be the remedy expressly stated in the guarantee document.</p>
+        <p>Unless otherwise stated, the remedy will be continued campaign management or other agreed service at no additional Social + Sum service fee until the agreed remedy condition is satisfied.</p>
+        <p>The Client remains responsible for advertising spend and third-party platform costs during any continuation period unless the guarantee expressly states otherwise.</p>
+        <p>A guarantee does not guarantee that a Client will close a customer or generate revenue.</p>
+        <h5>Performance Reporting</h5>
+        <p>Where reporting forms part of the agreed services, Social + Sum will report on agreed performance indicators.</p>
+        <p>These may include:</p>
+        <ul>
+          <li>enquiries;</li>
+          <li>qualified opportunities;</li>
+          <li>cost per opportunity;</li>
+          <li>consultations;</li>
+          <li>appointments;</li>
+          <li>quotations;</li>
+          <li>conversion activity; and</li>
+          <li>other agreed pipeline metrics.</li>
+        </ul>
+        <p>Where performance depends on Client-provided information, Social + Sum may rely on the accuracy and completeness of that information.</p>
+        <p>Social + Sum is not responsible for discrepancies caused by incomplete, delayed or inaccurate Client data.</p>
+        <h5>No Guaranteed Commercial Outcome</h5>
+        <p>Unless expressly stated in a separate written guarantee, Social + Sum does not guarantee:</p>
+        <ul>
+          <li>a particular number of leads;</li>
+          <li>a particular number of customers;</li>
+          <li>a particular level of revenue;</li>
+          <li>a particular profit level;</li>
+          <li>a particular return on advertising spend;</li>
+          <li>a particular conversion rate;</li>
+          <li>a particular cost per lead; or</li>
+          <li>any other specific commercial result.</li>
+        </ul>
+        <p>Marketing performance depends on factors outside Social + Sum&#39;s reasonable control.</p>
+        <h5>Suspension</h5>
+        <p>Social + Sum may suspend some or all services where:</p>
+        <ul>
+          <li>fees are overdue;</li>
+          <li>required access is unavailable;</li>
+          <li>required information has not been provided;</li>
+          <li>the Client has materially breached the agreement;</li>
+          <li>continuing the service would create legal or regulatory risk;</li>
+          <li>advertising activity would breach platform policy;</li>
+          <li>the Client has failed to meet a material guarantee condition; or</li>
+          <li>a required third-party platform becomes unavailable.</li>
+        </ul>
+        <p>Where reasonably possible, Social + Sum will notify the Client before suspension.</p>
+        <h5>Limitation of Liability</h5>
+        <p>Nothing in these Terms excludes or limits liability that cannot lawfully be excluded or limited.</p>
+        <p>Subject to that, Social + Sum will not be liable for indirect or consequential loss or for loss of:</p>
+        <ul>
+          <li>profit;</li>
+          <li>revenue;</li>
+          <li>anticipated savings;</li>
+          <li>business;</li>
+          <li>opportunity;</li>
+          <li>goodwill; or</li>
+          <li>data,</li>
+        </ul>
+        <p>except where such liability cannot lawfully be excluded.</p>
+        <p>Subject to any liability that cannot lawfully be limited, Social + Sum&#39;s total aggregate liability arising out of or in connection with an engagement will be limited to the total fees paid or payable to Social + Sum under that engagement during the period specified in the applicable proposal or order form.</p>
+        <p>Nothing in this clause limits liability arising from fraud or fraudulent misrepresentation or any other liability which cannot legally be excluded or limited.</p>
+        <p>The Client acknowledges that paid advertising, third-party platforms, software and customer behaviour involve risks outside Social + Sum&#39;s control.</p>
+        <h5>Indemnity for Client-Supplied Materials</h5>
+        <p>The Client remains responsible for ensuring that materials, data, claims and instructions supplied to Social + Sum can lawfully be used for the agreed purpose.</p>
+        <p>Where the Client provides materials or instructions that infringe a third party&#39;s rights or breach applicable law, the Client remains responsible for the consequences of those materials or instructions.</p>
+        <p>Nothing in this clause requires the Client to indemnify Social + Sum for losses caused by Social + Sum&#39;s own negligence, wilful misconduct or breach of its legal obligations.</p>
+        <h5>Force Majeure</h5>
+        <p>Neither party will be liable for delay or failure to perform obligations where the delay or failure results from circumstances reasonably outside that party&#39;s control.</p>
+        <p>This may include:</p>
+        <ul>
+          <li>advertising platform outages;</li>
+          <li>significant technology failures;</li>
+          <li>cyber incidents;</li>
+          <li>internet disruption;</li>
+          <li>changes to third-party platforms;</li>
+          <li>government action;</li>
+          <li>natural disasters;</li>
+          <li>strikes;</li>
+          <li>significant market disruption; or</li>
+          <li>other events outside the affected party&#39;s reasonable control.</li>
+        </ul>
+        <h5>Independent Contractor</h5>
+        <p>Social + Sum acts as an independent contractor.</p>
+        <p>Nothing in these Terms creates an employment relationship, partnership, joint venture or general agency relationship between the parties.</p>
+        <h5>Testimonials and Case Studies</h5>
+        <p>Social + Sum will not publicly identify the Client, publish its results or use its logo as a testimonial or case study without the Client&#39;s permission.</p>
+        <p>Where the Client provides written permission or a testimonial for marketing purposes, Social + Sum may use that material for legitimate promotional purposes subject to any restrictions agreed between the parties.</p>
+        <h5>Changes to the Business</h5>
+        <p>The Client must notify Social + Sum of material changes to its business that could affect the services.</p>
+        <p>This may include changes to:</p>
+        <ul>
+          <li>pricing;</li>
+          <li>services;</li>
+          <li>geographic coverage;</li>
+          <li>availability;</li>
+          <li>ideal customer;</li>
+          <li>project minimums;</li>
+          <li>consultation process;</li>
+          <li>website;</li>
+          <li>branding; or</li>
+          <li>sales process.</li>
+        </ul>
+        <p>A material change may require the parties to review the scope, strategy, timeline or guarantee.</p>
+        <p>Social + Sum is not required to maintain a guarantee where the underlying assumptions of the guarantee have materially changed and the parties have not agreed an updated arrangement.</p>
+        <h5>Changes to the Services</h5>
+        <p>Social + Sum may reasonably adjust its methods, tools and processes where necessary to deliver the agreed objectives.</p>
+        <p>We will not materially reduce the agreed scope without the Client&#39;s agreement.</p>
+        <p>Where a third-party platform changes its functionality, Social + Sum may need to adapt the delivery method accordingly.</p>
+        <h5>Subcontractors and Service Providers</h5>
+        <p>Social + Sum may use trusted contractors or service providers where reasonably necessary to deliver the services.</p>
+        <p>Where those providers process personal data on behalf of the Client, the applicable Data Processing Agreement provisions relating to subprocessors will apply.</p>
+        <p>Social + Sum remains responsible for its contractual obligations to the Client in relation to authorised subcontractors, subject to these Terms.</p>
+        <h5>Data Processing Agreement</h5>
+        <p>Where Social + Sum processes personal data on behalf of the Client, this section forms a Data Processing Agreement between the Client as Controller and Social + Sum as Processor.</p>
+        <h5>Subject Matter</h5>
+        <p>Social + Sum may process personal data for the purpose of providing the agreed marketing, lead generation, CRM, automation, reporting and client acquisition services.</p>
+        <p>Processing may include collecting, recording, organising, storing, accessing, structuring, updating, retrieving, transmitting and deleting personal data where required to provide the services.</p>
+        <h5>Duration</h5>
+        <p>Processing will continue for the duration of the engagement and for any limited period reasonably required to complete deletion, return, handover or other post-termination obligations.</p>
+        <h5>Categories of Personal Data</h5>
+        <p>Depending on the services, personal data may include:</p>
+        <ul>
+          <li>names;</li>
+          <li>business contact details;</li>
+          <li>email addresses;</li>
+          <li>telephone numbers;</li>
+          <li>company information;</li>
+          <li>enquiry information;</li>
+          <li>project requirements;</li>
+          <li>budget information;</li>
+          <li>communication records;</li>
+          <li>appointment information;</li>
+          <li>CRM records;</li>
+          <li>marketing preferences;</li>
+          <li>lead-source information; and</li>
+          <li>other information provided by or on behalf of the Client.</li>
+        </ul>
+        <p>The parties should identify any special category or sensitive personal data separately before such data is processed.</p>
+        <h5>Categories of Data Subjects</h5>
+        <p>Data subjects may include:</p>
+        <ul>
+          <li>prospective customers;</li>
+          <li>existing customers;</li>
+          <li>business contacts;</li>
+          <li>website visitors;</li>
+          <li>marketing leads;</li>
+          <li>enquiry contacts; and</li>
+          <li>other individuals whose personal data is provided to Social + Sum by the Client.</li>
+        </ul>
+        <h5>Controller Instructions</h5>
+        <p>Social + Sum will process personal data only on documented instructions from the Client unless required to do otherwise by UK law.</p>
+        <p>The Client&#39;s documented instructions may be provided through the agreed scope, proposal, CRM configuration, written instructions or other recorded communication.</p>
+        <p>Social + Sum will notify the Client if it reasonably believes an instruction infringes applicable data protection law.</p>
+        <h5>Confidentiality</h5>
+        <p>Social + Sum will ensure that persons authorised to process personal data are subject to appropriate confidentiality obligations.</p>
+        <p>Access to personal data will be limited to those who reasonably require it to provide the services.</p>
+        <h5>Security</h5>
+        <p>Social + Sum will maintain appropriate technical and organisational measures designed to protect personal data against accidental or unlawful destruction, loss, alteration, unauthorised disclosure or access.</p>
+        <p>Measures may include:</p>
+        <ul>
+          <li>appropriate access controls;</li>
+          <li>password protection;</li>
+          <li>multi-factor authentication where available and appropriate;</li>
+          <li>secure systems;</li>
+          <li>restricted access;</li>
+          <li>appropriate device security;</li>
+          <li>secure handling of credentials; and</li>
+          <li>reasonable procedures for identifying and responding to security incidents.</li>
+        </ul>
+        <p>The level of security will take into account the nature of the processing and the risks involved.</p>
+        <h5>Subprocessors</h5>
+        <p>The Client gives Social + Sum general authorisation to use appropriate third-party service providers where reasonably necessary to provide the services.</p>
+        <p>This may include CRM, advertising, email, SMS, analytics, hosting and automation providers.</p>
+        <p>Social + Sum will remain responsible for entering into appropriate contractual arrangements with subprocessors where required.</p>
+        <p>Social + Sum will provide information about material changes to subprocessors where required by applicable law.</p>
+        <p>The Client may raise a reasonable data protection objection to a proposed subprocessor.</p>
+        <h5>Data Subject Requests</h5>
+        <p>Taking into account the nature of the processing, Social + Sum will provide reasonable assistance to the Client where necessary for the Client to respond to lawful requests from data subjects.</p>
+        <p>This may include requests relating to:</p>
+        <ul>
+          <li>access;</li>
+          <li>correction;</li>
+          <li>deletion;</li>
+          <li>restriction;</li>
+          <li>objection; and</li>
+          <li>other applicable data protection rights.</li>
+        </ul>
+        <p>Social + Sum will not respond directly to a data subject request unless instructed by the Client or required by law.</p>
+        <h5>Personal Data Breaches</h5>
+        <p>Social + Sum will notify the Client without undue delay after becoming aware of a personal data breach affecting personal data processed on behalf of the Client.</p>
+        <p>Where reasonably possible, the notification will include information available about:</p>
+        <ul>
+          <li>the nature of the breach;</li>
+          <li>the categories of data affected;</li>
+          <li>the likely consequences; and</li>
+          <li>measures taken or proposed to address the incident.</li>
+        </ul>
+        <p>The Client remains responsible for determining whether a breach must be reported to the ICO or affected individuals unless otherwise agreed.</p>
+        <h5>Assistance</h5>
+        <p>Taking into account the nature of the processing and information available to Social + Sum, Social + Sum will provide reasonable assistance to the Client with:</p>
+        <ul>
+          <li>security obligations;</li>
+          <li>personal data breach obligations;</li>
+          <li>data protection impact assessments where applicable;</li>
+          <li>regulatory consultations where applicable; and</li>
+          <li>other obligations arising under applicable data protection law.</li>
+        </ul>
+        <p>Any assistance requiring substantial additional work may be chargeable where permitted by the agreement.</p>
+        <h5>International Transfers</h5>
+        <p>Where personal data is transferred outside the UK, the parties will take appropriate steps to ensure that the transfer is permitted under applicable data protection law.</p>
+        <p>The Client acknowledges that third-party platforms used in the services may process data internationally.</p>
+        <h5>Return and Deletion</h5>
+        <p>At the end of the engagement, Social + Sum will, at the Client&#39;s choice, return or delete personal data processed on the Client&#39;s behalf, unless applicable law requires continued retention.</p>
+        <p>The Client should communicate its preferred return or deletion requirement at the end of the engagement.</p>
+        <p>Social + Sum may retain information where required for legal, accounting, insurance, dispute-resolution or regulatory purposes, subject to applicable data protection obligations.</p>
+        <h5>Audit and Compliance Information</h5>
+        <p>Social + Sum will provide reasonable information necessary to demonstrate compliance with its processor obligations.</p>
+        <p>Where required by applicable data protection law, Social + Sum will cooperate with reasonable audits or inspections by the Client or an auditor appointed by the Client.</p>
+        <p>Audits must:</p>
+        <ul>
+          <li>be reasonable in scope;</li>
+          <li>take account of confidentiality;</li>
+          <li>avoid unnecessary disruption;</li>
+          <li>not expose information relating to other clients; and</li>
+          <li>be subject to reasonable security requirements.</li>
+        </ul>
+        <p>The Client will bear its own audit costs unless applicable law requires otherwise.</p>
+        <h5>Privacy and Marketing Data</h5>
+        <p>Nothing in these Terms transfers the Client&#39;s responsibility for determining whether personal data may lawfully be collected, used or marketed to.</p>
+        <p>Where Social + Sum uses personal data for its own independent purposes rather than solely on the Client&#39;s instructions, Social + Sum may act as a separate controller for that processing.</p>
+        <p>The parties will cooperate to identify the appropriate role for each processing activity.</p>
+        <h5>Handover of Personal Data</h5>
+        <p>On termination, the parties will cooperate to ensure that personal data is appropriately returned, transferred or deleted in accordance with the Data Processing Agreement.</p>
+        <p>The Client remains responsible for ensuring that any new provider receiving personal data is lawfully entitled to receive it.</p>
+        <h5>Entire Agreement</h5>
+        <p>These Terms and the documents incorporated into them constitute the entire agreement between Social + Sum and the Client regarding the services.</p>
+        <p>They replace previous discussions or understandings relating to the same services unless expressly incorporated into the agreement.</p>
+        <h5>Severability</h5>
+        <p>If any provision of these Terms is found to be invalid or unenforceable, the remaining provisions will continue to apply.</p>
+        <p>The parties will seek to replace the affected provision with a lawful provision that most closely reflects the original commercial intention.</p>
+        <h5>No Waiver</h5>
+        <p>A failure or delay by either party to enforce a right under these Terms does not constitute a waiver of that right.</p>
+        <h5>Governing Law</h5>
+        <p>These Terms and the agreement between Social + Sum and the Client are governed by the laws of England and Wales.</p>
+        <p>The courts of England and Wales will have jurisdiction over disputes, subject to any mandatory rights or protections that apply by law.</p>
+        <h5>Acceptance</h5>
+        <p>By signing a proposal, accepting an order, paying an invoice, instructing Social + Sum to begin work or otherwise proceeding with the services, the Client confirms that it has read, understood and agreed to these Terms and the documents incorporated into them.</p>
+      </div>
+      <div class="consent-row">
+        <input type="checkbox" id="tosAgree">
+        <label for="tosAgree">I have read and agree to the Terms of Service above.</label>
+      </div>
+      <div class="sig-field">
+        <label>Full legal name</label>
+        <input type="text" id="tosSig" placeholder="Full legal name">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="sig-pad-label">Draw your signature</label>
+        <div class="sig-canvas-wrap">
+          <canvas id="tosSigCanvas" class="sig-canvas"></canvas>
+          <span class="sig-canvas-placeholder" id="tosSigPlaceholder">Sign here</span>
+        </div>
+        <div class="sig-pad-row">
+          <span class="sig-meta">Signing electronically on <span id="tosDate"></span></span>
+          <button type="button" class="sig-clear" onclick="clearSigPad('tos')">Clear</button>
+        </div>
+      </div>
+      <button type="button" class="btn btn-ghost btn-sm" id="tosDownloadBtn" onclick="downloadTos()" disabled style="margin-bottom:18px;">Download your signed terms (PDF) <span class="dot">·</span></button>
+      <div class="step-actions">
+        <button type="button" class="btn btn-ghost" onclick="goStep(1)">Back</button>
+        <button type="button" class="btn btn-primary btn-notready" id="tosNext" onclick="tosContinueClick()">Continue <span class="dot">·</span></button>
+      </div>
+    </section>
+
+    <!-- STEP 3: GUARANTEE -->
+    <section class="onb-step" id="step3">
+      <h3>Our guarantee</h3>
+      <p class="step-lead">What we commit to, and how it's handled if we don't hit it.</p>
+      <div class="legal-box">
+        <h5>Your Guarantee</h5>
+        <p>As part of your engagement, your agreement includes a performance guarantee designed to give you additional confidence in the process.</p>
+        <p>Because every client has a different market, average project value, service area, ad budget and sales process, the specific guarantee metrics and thresholds are not one-size-fits-all.</p>
+        <p>Rather than asking you to sign a generic guarantee during onboarding, we will provide your individual Guarantee Document separately once your campaign and commercial parameters have been confirmed.</p>
+        <p>That document will clearly set out:</p>
+        <ul>
+          <li>The specific performance metric being guaranteed</li>
+          <li>The agreed target or maximum threshold</li>
+          <li>What we consider a qualified opportunity</li>
+          <li>The timeframe over which the guarantee applies</li>
+          <li>Your responsibilities for the guarantee to remain valid, including lead-response requirements</li>
+          <li>What happens if the agreed performance threshold is not achieved</li>
+        </ul>
+        <p>The purpose of the guarantee is to ensure that the part of the process we control is measurable and accountable. We do not guarantee closed clients or revenue, as those outcomes also depend on factors outside our control, including your consultation, quoting and closing process.</p>
+        <p>Your individual guarantee will therefore be agreed based on the economics and requirements of your business, rather than applying an arbitrary figure across every client.</p>
+        <p>You will receive and sign the separate Guarantee Document before your campaign goes live.</p>
+      </div>
+      <div class="consent-row">
+        <input type="checkbox" id="gAgree">
+        <label for="gAgree">I understand and accept the guarantee terms above.</label>
+      </div>
+      <div class="sig-field">
+        <label>Full legal name</label>
+        <input type="text" id="gSig" placeholder="Full legal name">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="sig-pad-label">Draw your signature</label>
+        <div class="sig-canvas-wrap">
+          <canvas id="gSigCanvas" class="sig-canvas"></canvas>
+          <span class="sig-canvas-placeholder" id="gSigPlaceholder">Sign here</span>
+        </div>
+        <div class="sig-pad-row">
+          <span class="sig-meta">Signing electronically on <span id="gDate"></span></span>
+          <button type="button" class="sig-clear" onclick="clearSigPad('g')">Clear</button>
+        </div>
+      </div>
+      <div class="step-actions">
+        <button type="button" class="btn btn-ghost" onclick="goStep(2)">Back</button>
+        <button type="button" class="btn btn-primary btn-notready" id="gNext" onclick="gContinueClick()">Continue <span class="dot">·</span></button>
+      </div>
+    </section>
+
+    <!-- STEP 4: REVIEW & SUBMIT -->
+    <section class="onb-step" id="step4">
+      <h3>Review &amp; submit</h3>
+      <p class="step-lead">Check everything below, then continue to see your payment options.</p>
+      <dl class="review-list" id="reviewList"></dl>
+      <button type="button" class="btn btn-primary" style="width:100%;" onclick="prepareSubmission()">Pay now <span class="dot">·</span></button>
+      <div style="text-align:center; margin-top:16px;">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="downloadAllSignedDocs()">Download your signed terms &amp; guarantee again <span class="dot">·</span></button>
+      </div>
+      <div id="afterSubmit" style="display:none; margin-top:28px; border-top:1px solid var(--line); padding-top:24px;">
+        <p class="submit-note" style="margin-bottom:0; font-weight:600; color:var(--ink);">Choose how you'd like to pay:</p>
+        <div class="pay-options-inline">
+          <div class="pay-option-card">
+            <h4>Pay upfront</h4>
+            <p class="pay-opt-price">£3,000, 3 months</p>
+            <a href="https://buy.stripe.com/bJe14oaZy4t68J0eNN5sA00" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="width:100%;" onclick="notifyOnboard('Clicked payment link — pay upfront')">Pay now <span class="dot">·</span></a>
+          </div>
+          <div class="pay-option-card">
+            <h4>Pay monthly</h4>
+            <p class="pay-opt-price">£1,000 a month, 3 months</p>
+            <a href="https://buy.stripe.com/00w5kEaZyaRu0cucFF5sA01" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="width:100%;" onclick="notifyOnboard('Clicked payment link — pay monthly')">Pay now <span class="dot">·</span></a>
+          </div>
+        </div>
+        <div class="pay-secure-inline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          Processed securely by Stripe, opens in a new tab, card details never pass through this site.
+        </div>
+        <div style="text-align:center; margin-top:24px; border-top:1px solid var(--line); padding-top:24px;">
+          <p class="submit-note" style="margin-bottom:12px; color:var(--ink-soft);">Once you've paid, send over your brand assets so we can get started.</p>
+          <a href="https://forms.gle/2CG6BG95SC8pq3Q56" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Upload brand assets <span class="dot">·</span></a>
+        </div>
+      </div>
+      <div class="step-actions" style="margin-top:20px;">
+        <button type="button" class="btn btn-ghost" onclick="goStep(3)">Back</button>
+        <span></span>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="onb-modal-overlay" id="fieldsModal">
+  <div class="onb-modal-box">
+    <svg class="onb-modal-icon" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="13"/><circle cx="12" cy="16.5" r="0.6" fill="var(--coral)" stroke="none"/></svg>
+    <h3>A few details are missing<span class="dot">.</span></h3>
+    <p>Please complete all the fields highlighted above before continuing.</p>
+    <button type="button" class="btn btn-primary" id="fieldsModalClose">Got it</button>
+  </div>
+</div>
+
+<script src="site.js"></script>
+<script>
+  // ---- EmailJS config (notifies hello@socialandsum.com automatically) ----
+  var EMAILJS_SERVICE_ID = 'service_xzeok1s';
+  var EMAILJS_TEMPLATE_ID = 'template_fhjhqgn';
+  var EMAILJS_PUBLIC_KEY = 'jLoSx4rLz8nhS1bgv';
+
+  function notifyOnboard(stage){
+    if (!(EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY)) return;
+    fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_id: EMAILJS_SERVICE_ID,
+        template_id: EMAILJS_TEMPLATE_ID,
+        user_id: EMAILJS_PUBLIC_KEY,
+        template_params: {
+          studio: val('fStudio') || '—',
+          name: val('fName') || '—',
+          email: val('fEmail') || '',
+          phone: val('fPhone') || '—',
+          tos_signed: val('tosSig') || '—',
+          g_signed: val('gSig') || '—',
+          date: dateStr,
+          stage: stage
+        }
+      })
+    }).catch(function(){ /* best-effort — a failed notification shouldn't block the client */ });
+  }
+
+  var current = 1;
+  var today = new Date();
+  var dateStr = today.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  document.getElementById('tosDate').textContent = dateStr;
+  document.getElementById('gDate').textContent = dateStr;
+
+  function updateProgress(){
+    for (var i=1; i<=4; i++){
+      document.getElementById('seg'+i).style.width = (i <= current) ? '100%' : '0%';
+      document.getElementById('lbl'+i).classList.toggle('active', i === current);
+    }
+  }
+
+  function goStep(n){
+    if (n === 4){ buildReview(); emailSignedDocsCopy(); }
+    document.getElementById('step'+current).classList.remove('active');
+    current = n;
+    document.getElementById('step'+current).classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // the canvas has zero size while its step is hidden (display:none), so re-measure
+    // and re-size it now that the step is visible, or drawing on it silently does nothing
+    if (n === 2 && sigPads.tos){ sigPads.tos.resize(); checkTos(); }
+    if (n === 3 && sigPads.g){ sigPads.g.resize(); checkG(); }
+  }
+
+  // ---- Signature pads (draw, not typed) ----
+  var sigPads = {};
+  function setupSigPad(prefix){
+    var canvas = document.getElementById(prefix + 'SigCanvas');
+    var placeholder = document.getElementById(prefix + 'SigPlaceholder');
+    var ctx = canvas.getContext('2d');
+    var drawing = false, hasInk = false;
+    var ratio = window.devicePixelRatio || 1;
+
+    function size(){
+      var w = canvas.clientWidth, h = canvas.clientHeight;
+      if (!w || !h) return; // step still hidden, nothing to measure yet, resize() catches it later
+      // already sized to this, leave it alone, re-sizing would clear a signature
+      // that's already been drawn every time someone navigates back to this step
+      if (canvas.width === Math.round(w * ratio) && canvas.height === Math.round(h * ratio)) return;
+      canvas.width = w * ratio; canvas.height = h * ratio;
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.scale(ratio, ratio);
+      ctx.strokeStyle = '#16222B'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      hasInk = false;
+      placeholder.style.display = 'block';
+    }
+    size();
+
+    function pos(e){
+      var r = canvas.getBoundingClientRect();
+      var p = (e.touches && e.touches[0]) ? e.touches[0] : e;
+      return { x: p.clientX - r.left, y: p.clientY - r.top };
+    }
+    function start(e){ e.preventDefault(); drawing = true; var p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }
+    function recheck(){ if (prefix === 'tos'){ if (typeof checkTos === 'function') checkTos(); } else { if (typeof checkG === 'function') checkG(); } }
+    function move(e){
+      if (!drawing) return; e.preventDefault();
+      var p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke();
+      if (!hasInk){ hasInk = true; placeholder.style.display = 'none'; recheck(); }
+    }
+    function end(){ drawing = false; }
+
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', end);
+    canvas.addEventListener('touchstart', start, { passive:false });
+    canvas.addEventListener('touchmove', move, { passive:false });
+    canvas.addEventListener('touchend', end);
+
+    sigPads[prefix] = {
+      canvas: canvas,
+      resize: size,
+      hasInk: function(){ return hasInk; },
+      clear: function(){ ctx.clearRect(0,0,canvas.width,canvas.height); hasInk = false; placeholder.style.display = 'block'; },
+      dataUrl: function(){ return canvas.toDataURL('image/png'); }
+    };
+  }
+  setupSigPad('tos');
+  setupSigPad('g');
+  function clearSigPad(prefix){ sigPads[prefix].clear(); if (prefix === 'tos') checkTos(); else checkG(); }
+
+  function checkTos(){
+    var ok = document.getElementById('tosAgree').checked && document.getElementById('tosSig').value.trim().length > 1 && sigPads.tos.hasInk();
+    document.getElementById('tosNext').classList.toggle('btn-ready', ok);
+    document.getElementById('tosDownloadBtn').disabled = !ok;
+  }
+  document.getElementById('tosAgree').addEventListener('change', checkTos);
+  document.getElementById('tosSig').addEventListener('input', checkTos);
+
+  var tosText =
+    'SOCIAL + SUM — TERMS OF SERVICE\n\n' +
+    'These Terms of Service ("Terms") apply to services provided by Social + Sum ("Social + Sum", "we", "us" or "our") to the person or business purchasing our services ("Client", "you" or "your").\n\n' +
+    'By accepting a proposal, order form, statement of work, invoice or other written confirmation for our services, you agree to these Terms.\n\n' +
+    'The proposal or order form issued to you will set out the specific commercial terms of your engagement, including the services, fees, payment schedule, engagement period, advertising budget and any specific guarantee offered.\n\n' +
+    'Agreement Structure\n\n' +
+    'The agreement between Social + Sum and the Client consists of:\n\n' +
+    'these Terms of Service;\n' +
+    'the applicable proposal, order form or statement of work;\n' +
+    'any separate guarantee document agreed between the parties;\n' +
+    'the Data Processing Agreement contained in these Terms where applicable; and\n' +
+    'any other document expressly incorporated into the agreement.\n\n' +
+    'If there is a conflict between these documents:\n\n' +
+    'the proposal or order form will take precedence in relation to fees, payment dates, scope, engagement period and other commercial terms;\n' +
+    'a separate guarantee document will take precedence in relation to the specific guarantee;\n' +
+    'the Data Processing Agreement will take precedence in relation to the processing of personal data; and\n' +
+    'these Terms will apply to all other matters.\n\n' +
+    'No verbal statement or informal conversation will amend the agreement unless confirmed in writing.\n\n' +
+    'Services\n\n' +
+    'Social + Sum provides client acquisition, marketing, CRM and sales-process services.\n\n' +
+    'Depending on the services agreed, this may include:\n\n' +
+    'client acquisition strategy;\n' +
+    'paid advertising strategy and campaign management;\n' +
+    'Meta advertising setup, management and optimisation;\n' +
+    'campaign targeting and testing;\n' +
+    'advertising creative and copy;\n' +
+    'lead generation;\n' +
+    'lead qualification;\n' +
+    'CRM setup and configuration;\n' +
+    'CRM pipelines;\n' +
+    'automated email and SMS workflows;\n' +
+    'lead nurturing;\n' +
+    'appointment and consultation workflows;\n' +
+    'lead reactivation;\n' +
+    'sales-process consulting;\n' +
+    'pipeline development and optimisation;\n' +
+    'reporting and performance analysis; and\n' +
+    'strategic recommendations relating to customer acquisition.\n\n' +
+    'The exact services included in the Client\'s engagement will be set out in the applicable proposal or order form.\n\n' +
+    'Anything not expressly included in the agreed scope is outside the scope of the services.\n\n' +
+    'Scope of Work\n\n' +
+    'Social + Sum is responsible only for the deliverables expressly included in the agreed scope.\n\n' +
+    'Unless expressly included, the services do not include:\n\n' +
+    'website design or development;\n' +
+    'full branding or rebranding;\n' +
+    'photography or videography;\n' +
+    'extensive graphic design;\n' +
+    'ongoing social media management;\n' +
+    'content creation unrelated to the agreed campaigns;\n' +
+    'sales appointment attendance;\n' +
+    'sales closing;\n' +
+    'preparation of Client quotations;\n' +
+    'customer service;\n' +
+    'fulfilment of the Client\'s services;\n' +
+    'legal, financial or regulatory advice;\n' +
+    'management of the Client\'s employees;\n' +
+    'management of the Client\'s wider business; or\n' +
+    'any other service not expressly included in writing.\n\n' +
+    'Social + Sum is not required to undertake additional work merely because that work is related to the Client\'s marketing or sales activity.\n\n' +
+    'Additional work may be quoted separately and will only be undertaken once the Client has approved the additional scope and any applicable fee.\n\n' +
+    'Meetings, Communication and Revisions\n\n' +
+    'The proposal or order form may specify the agreed meeting frequency and communication arrangements.\n\n' +
+    'Unless otherwise agreed:\n\n' +
+    'meetings will be scheduled in advance;\n' +
+    'the Client is responsible for attending or providing reasonable notice of cancellation;\n' +
+    'requests outside the agreed scope may be treated as additional work;\n' +
+    'creative or campaign revisions will be limited to what is reasonably necessary to deliver the agreed work; and\n' +
+    'repeated changes to an approved strategy, campaign, offer or creative direction may constitute additional work.\n\n' +
+    'Social + Sum is not required to attend unlimited meetings, respond immediately to every message or provide unlimited revisions as part of the agreed fee.\n\n' +
+    'Where a Client-caused delay materially affects delivery, Social + Sum may reasonably adjust the delivery timetable.\n\n' +
+    'Fees and Payment\n\n' +
+    'All fees, payment dates, payment methods and applicable taxes will be stated in the proposal, order form or invoice.\n\n' +
+    'The Client agrees to pay fees by the agreed due date.\n\n' +
+    'Unless otherwise agreed in writing, work will not begin until any required initial payment has been received and the required onboarding information and access have been provided.\n\n' +
+    'Where an invoice becomes overdue, Social + Sum may:\n\n' +
+    'suspend work;\n' +
+    'pause advertising or other activity where appropriate;\n' +
+    'withhold delivery of unfinished work;\n' +
+    'postpone scheduled work;\n' +
+    'require overdue amounts to be paid before work resumes; and\n' +
+    'exercise any other rights available under the agreement or applicable law.\n\n' +
+    'Suspension caused by non-payment does not automatically extend the engagement or reduce the fees payable.\n\n' +
+    'Where permitted by law, Social + Sum may charge interest on overdue business-to-business invoices at the applicable statutory rate or any other lawful contractual rate stated in the proposal or invoice.\n\n' +
+    'Commitment, Cancellation and Early Termination\n\n' +
+    'The Client\'s commitment period will be stated in the proposal or order form.\n\n' +
+    'Where the engagement is agreed for a fixed period, the Client remains responsible for the fees agreed for that commitment period unless the agreement expressly provides otherwise.\n\n' +
+    'Cancellation of the engagement does not automatically entitle the Client to a refund.\n\n' +
+    'Fees relating to work already completed, work already committed, non-refundable third-party costs and any other amounts properly due remain payable following cancellation.\n\n' +
+    'If the Client requests early termination of a fixed-term engagement, Social + Sum may accept the termination subject to the commercial terms stated in the proposal or order form.\n\n' +
+    'Either party may terminate the agreement where the other party materially breaches the agreement and fails to remedy the breach within a reasonable period following written notice.\n\n' +
+    'Social + Sum may terminate the engagement immediately where:\n\n' +
+    'continuing the services would be unlawful;\n' +
+    'the Client asks Social + Sum to undertake unlawful or misleading activity;\n' +
+    'the Client materially breaches data protection or advertising requirements;\n' +
+    'the Client repeatedly fails to provide required access or information;\n' +
+    'fees remain materially overdue;\n' +
+    'the Client behaves abusively, threateningly or unreasonably towards Social + Sum; or\n' +
+    'continued performance would expose Social + Sum to significant legal, regulatory or platform risk.\n\n' +
+    'Termination does not affect rights or obligations that arose before termination.\n\n' +
+    'Refunds\n\n' +
+    'Unless expressly stated otherwise in the proposal or order form, fees for completed services are non-refundable.\n\n' +
+    'A refund will not be due merely because:\n\n' +
+    'advertising performance does not meet the Client\'s expectations;\n' +
+    'the Client does not convert an enquiry into a customer;\n' +
+    'the Client does not respond to leads;\n' +
+    'the Client changes its strategy;\n' +
+    'the Client changes its mind about the service;\n' +
+    'the Client does not implement recommendations; or\n' +
+    'the Client\'s business circumstances change.\n\n' +
+    'Any specific refund or service-credit arrangement must be expressly agreed in writing.\n\n' +
+    'Client Responsibilities\n\n' +
+    'The Client agrees to provide all information, materials, access and cooperation reasonably required to deliver the services.\n\n' +
+    'This may include:\n\n' +
+    'accurate business information;\n' +
+    'brand information;\n' +
+    'website access;\n' +
+    'Meta Business Manager and advertising account access;\n' +
+    'social media access;\n' +
+    'CRM access;\n' +
+    'relevant software access;\n' +
+    'photography and creative assets;\n' +
+    'service information;\n' +
+    'pricing information;\n' +
+    'project information;\n' +
+    'target geographic areas;\n' +
+    'information about ideal customers;\n' +
+    'consultation availability;\n' +
+    'historic lead or customer information where lawful;\n' +
+    'relevant approvals; and\n' +
+    'information reasonably required to assess campaign performance.\n\n' +
+    'The Client is responsible for ensuring that information supplied to Social + Sum is accurate, complete and lawful.\n\n' +
+    'The Client is responsible for responding to leads, conducting consultations, preparing proposals or quotations, following up prospects, closing sales and delivering its services unless expressly agreed otherwise.\n\n' +
+    'Client Response Obligations\n\n' +
+    'Where lead response is relevant to campaign performance or a guarantee, the Client must respond to leads within the response period stated in the applicable proposal or guarantee document.\n\n' +
+    'The Client must maintain reasonable availability to receive and respond to enquiries.\n\n' +
+    'Where a lead is generated but the Client does not respond within the agreed response period, the lead may cease to qualify for any applicable performance guarantee.\n\n' +
+    'Social + Sum is not responsible for lost opportunities caused by delayed or inadequate Client follow-up.\n\n' +
+    'Advertising Accounts and Advertising Spend\n\n' +
+    'Where paid advertising forms part of the services, advertising spend is separate from Social + Sum\'s service fees unless expressly stated otherwise.\n\n' +
+    'Where possible, advertising spend will be paid directly by the Client to the relevant advertising platform.\n\n' +
+    'The Client remains responsible for:\n\n' +
+    'maintaining valid payment details;\n' +
+    'maintaining access to advertising accounts;\n' +
+    'complying with platform policies;\n' +
+    'approving advertising materials where required;\n' +
+    'ensuring advertised services are available;\n' +
+    'ensuring advertised prices and claims are accurate; and\n' +
+    'ensuring that its business is legally able to provide the advertised services.\n\n' +
+    'Social + Sum does not guarantee that an advertising platform will approve, deliver, maintain or continue any particular campaign.\n\n' +
+    'Social + Sum is not responsible for advertising account restrictions, suspensions, outages, algorithm changes, policy changes or other platform decisions outside our reasonable control.\n\n' +
+    'Third-Party Platforms\n\n' +
+    'The services may rely on third-party platforms including Meta, CRM systems, email providers, SMS providers, analytics tools, hosting providers and other software.\n\n' +
+    'Third-party platforms are controlled by their respective providers.\n\n' +
+    'Social + Sum is not responsible for:\n\n' +
+    'platform outages;\n' +
+    'changes to platform functionality;\n' +
+    'account restrictions;\n' +
+    'platform pricing;\n' +
+    'changes to algorithms;\n' +
+    'policy changes;\n' +
+    'technical failures;\n' +
+    'third-party security incidents; or\n' +
+    'loss of functionality caused by the third-party provider.\n\n' +
+    'The Client remains responsible for any third-party subscription fees unless otherwise agreed.\n\n' +
+    'Account Ownership\n\n' +
+    'Client-owned accounts remain owned by the Client.\n\n' +
+    'Where Social + Sum is granted access to a Client\'s advertising account, CRM, website, social media account or other business system, that access is provided solely for the purpose of delivering the agreed services.\n\n' +
+    'Social + Sum will not represent itself as the owner of Client accounts.\n\n' +
+    'Where Social + Sum creates or configures systems within a Client-owned platform, those systems remain subject to the ownership and licensing terms of that platform.\n\n' +
+    'Social + Sum retains ownership of its own pre-existing methodologies, frameworks, templates, systems, processes, know-how and reusable intellectual property.\n\n' +
+    'Intellectual Property\n\n' +
+    'Each party retains ownership of intellectual property it owned before the engagement.\n\n' +
+    'Client-supplied materials remain the property of the Client or the relevant rights holder.\n\n' +
+    'Subject to payment of all applicable fees, the Client may use bespoke deliverables created specifically for it as part of the agreed services for its own business purposes.\n\n' +
+    'Unless expressly agreed otherwise, Social + Sum retains ownership of:\n\n' +
+    'pre-existing templates;\n' +
+    'campaign frameworks;\n' +
+    'strategic methodologies;\n' +
+    'processes;\n' +
+    'know-how;\n' +
+    'internal documentation;\n' +
+    'reusable systems;\n' +
+    'generic automation structures;\n' +
+    'general-purpose scripts or templates;\n' +
+    'working methods; and\n' +
+    'materials capable of being used across multiple client engagements.\n\n' +
+    'The Client does not acquire ownership of Social + Sum\'s underlying methods merely because they are used in delivering the services.\n\n' +
+    'Third-party intellectual property remains subject to the relevant third-party licence.\n\n' +
+    'Creative Approval\n\n' +
+    'Where Social + Sum produces advertising copy, campaign messaging, graphics or other creative materials, the Client may be asked to approve those materials before publication.\n\n' +
+    'The Client is responsible for confirming the accuracy of business-specific information including:\n\n' +
+    'prices;\n' +
+    'offers;\n' +
+    'availability;\n' +
+    'service descriptions;\n' +
+    'testimonials;\n' +
+    'qualifications;\n' +
+    'claims about previous results;\n' +
+    'guarantees;\n' +
+    'geographic availability; and\n' +
+    'other factual statements about its business.\n\n' +
+    'Social + Sum may refuse to publish material where we reasonably believe it may be misleading, unlawful or contrary to an advertising platform\'s policies.\n\n' +
+    'Client approval does not remove Social + Sum\'s obligation to exercise reasonable professional care.\n\n' +
+    'Client Delays\n\n' +
+    'The Client acknowledges that Social + Sum\'s ability to deliver the services depends on timely cooperation.\n\n' +
+    'If the Client delays:\n\n' +
+    'providing access;\n' +
+    'providing assets;\n' +
+    'approving creative;\n' +
+    'supplying information;\n' +
+    'responding to questions;\n' +
+    'attending required meetings; or\n' +
+    'completing agreed actions,\n\n' +
+    'Social + Sum may reasonably adjust delivery dates, pause work or reschedule the engagement.\n\n' +
+    'Where a delay is substantial, Social + Sum may treat the engagement as suspended until the Client is ready to proceed.\n\n' +
+    'Fees already due remain payable during Client-caused delays unless otherwise agreed in writing.\n\n' +
+    'Handover\n\n' +
+    'At the end of the engagement, Social + Sum will provide reasonable handover of Client-owned assets and access required for the Client to continue using the systems created for its business.\n\n' +
+    'Handover does not include unlimited training, rebuilding, migration, troubleshooting or ongoing support unless expressly included in the agreed scope.\n\n' +
+    'Additional handover, migration or training work may be charged separately.\n\n' +
+    'Social + Sum may retain copies of records where reasonably required for legal, accounting, insurance, dispute-resolution or compliance purposes, subject to applicable data protection obligations.\n\n' +
+    'Data Protection\n\n' +
+    'The parties will comply with applicable UK data protection legislation.\n\n' +
+    'Where Social + Sum processes personal data on behalf of the Client as a processor, the Data Processing Agreement contained in these Terms will apply.\n\n' +
+    'The Client remains responsible for determining:\n\n' +
+    'the purposes for which personal data is processed;\n' +
+    'the lawful basis for processing;\n' +
+    'the information provided to individuals;\n' +
+    'the lawfulness of marketing activity;\n' +
+    'the accuracy of personal data supplied to Social + Sum; and\n' +
+    'compliance with applicable marketing laws.\n\n' +
+    'This is particularly relevant where services involve email, SMS, lead reactivation or other direct marketing activity.\n\n' +
+    'The Client must not provide Social + Sum with personal data unless it is lawfully entitled to do so.\n\n' +
+    'Marketing Compliance\n\n' +
+    'The Client is responsible for ensuring that its offers, claims, services and business practices comply with applicable laws and regulations.\n\n' +
+    'Where Social + Sum creates or operates marketing campaigns using Client information, the Client remains responsible for the underlying accuracy and legality of its business claims.\n\n' +
+    'Where personal data is used for direct marketing, the parties will cooperate to ensure that the relevant UK data protection and electronic marketing requirements are addressed.\n\n' +
+    'Social + Sum may pause or refuse marketing activity where it reasonably believes the proposed activity may breach applicable law, regulation or platform policy.\n\n' +
+    'Confidentiality\n\n' +
+    'Each party agrees to keep confidential non-public information received from the other party in connection with the engagement.\n\n' +
+    'Confidential information may include:\n\n' +
+    'commercial information;\n' +
+    'financial information;\n' +
+    'customer information;\n' +
+    'lead information;\n' +
+    'marketing strategy;\n' +
+    'pricing;\n' +
+    'business processes;\n' +
+    'passwords and access credentials;\n' +
+    'unpublished campaign information; and\n' +
+    'proprietary systems or methods.\n\n' +
+    'Confidential information may only be used for the purposes of the engagement.\n\n' +
+    'This obligation does not apply to information that:\n\n' +
+    'is publicly available without breach;\n' +
+    'was lawfully known before disclosure;\n' +
+    'is independently developed;\n' +
+    'is lawfully received from another source; or\n' +
+    'must be disclosed by law.\n' +
+    'Guarantee\n\n' +
+    'Where a guarantee is included in the Client\'s proposal, the guarantee will be governed by the specific guarantee terms agreed between the parties.\n\n' +
+    'Unless expressly stated otherwise, a Social + Sum guarantee relates to agreed qualified opportunities, not guaranteed sales, revenue, profit, closed customers or return on advertising spend.\n\n' +
+    'A qualified opportunity must meet the qualification criteria agreed for the engagement.\n\n' +
+    'These criteria may include:\n\n' +
+    'being within the agreed geographic area;\n' +
+    'requiring an agreed type of service;\n' +
+    'meeting agreed project or budget criteria where applicable;\n' +
+    'providing genuine contact information;\n' +
+    'demonstrating a genuine business requirement;\n' +
+    'being a genuine prospective customer rather than spam or a test submission; and\n' +
+    'being generated through the agreed campaign or acquisition system.\n\n' +
+    'The guarantee does not apply to opportunities that are:\n\n' +
+    'duplicates;\n' +
+    'spam;\n' +
+    'fraudulent;\n' +
+    'test submissions;\n' +
+    'generated independently of the agreed campaign;\n' +
+    'outside the agreed geographic or service criteria;\n' +
+    'already known to the Client before campaign generation;\n' +
+    'generated because of the Client\'s own independent marketing activity;\n' +
+    'rendered unusable because the Client failed to respond;\n' +
+    'rendered unusable because the Client failed to attend a consultation;\n' +
+    'rejected by the Client for reasons unrelated to lead quality;\n' +
+    'affected by a material change to the Client\'s offer, pricing, availability or geographic area; or\n' +
+    'affected by a platform failure, restriction or event outside Social + Sum\'s reasonable control.\n\n' +
+    'The Client must provide reasonable evidence required to determine whether an opportunity qualifies.\n\n' +
+    'Evidence may include CRM records, enquiry forms, call records, appointment records, email records, campaign data and other relevant information.\n\n' +
+    'Social + Sum may reasonably request access to relevant records where required to assess a guarantee claim.\n\n' +
+    'The Client must meet all obligations stated in the applicable guarantee, including any requirements relating to:\n\n' +
+    'lead response;\n' +
+    'consultation availability;\n' +
+    'advertising spend;\n' +
+    'access;\n' +
+    'approvals;\n' +
+    'campaign continuity;\n' +
+    'sales follow-up; and\n' +
+    'provision of information.\n\n' +
+    'If the agreed guarantee conditions are satisfied and the agreed performance threshold is not achieved, the remedy will be the remedy expressly stated in the guarantee document.\n\n' +
+    'Unless otherwise stated, the remedy will be continued campaign management or other agreed service at no additional Social + Sum service fee until the agreed remedy condition is satisfied.\n\n' +
+    'The Client remains responsible for advertising spend and third-party platform costs during any continuation period unless the guarantee expressly states otherwise.\n\n' +
+    'A guarantee does not guarantee that a Client will close a customer or generate revenue.\n\n' +
+    'Performance Reporting\n\n' +
+    'Where reporting forms part of the agreed services, Social + Sum will report on agreed performance indicators.\n\n' +
+    'These may include:\n\n' +
+    'enquiries;\n' +
+    'qualified opportunities;\n' +
+    'cost per opportunity;\n' +
+    'consultations;\n' +
+    'appointments;\n' +
+    'quotations;\n' +
+    'conversion activity; and\n' +
+    'other agreed pipeline metrics.\n\n' +
+    'Where performance depends on Client-provided information, Social + Sum may rely on the accuracy and completeness of that information.\n\n' +
+    'Social + Sum is not responsible for discrepancies caused by incomplete, delayed or inaccurate Client data.\n\n' +
+    'No Guaranteed Commercial Outcome\n\n' +
+    'Unless expressly stated in a separate written guarantee, Social + Sum does not guarantee:\n\n' +
+    'a particular number of leads;\n' +
+    'a particular number of customers;\n' +
+    'a particular level of revenue;\n' +
+    'a particular profit level;\n' +
+    'a particular return on advertising spend;\n' +
+    'a particular conversion rate;\n' +
+    'a particular cost per lead; or\n' +
+    'any other specific commercial result.\n\n' +
+    'Marketing performance depends on factors outside Social + Sum\'s reasonable control.\n\n' +
+    'Suspension\n\n' +
+    'Social + Sum may suspend some or all services where:\n\n' +
+    'fees are overdue;\n' +
+    'required access is unavailable;\n' +
+    'required information has not been provided;\n' +
+    'the Client has materially breached the agreement;\n' +
+    'continuing the service would create legal or regulatory risk;\n' +
+    'advertising activity would breach platform policy;\n' +
+    'the Client has failed to meet a material guarantee condition; or\n' +
+    'a required third-party platform becomes unavailable.\n\n' +
+    'Where reasonably possible, Social + Sum will notify the Client before suspension.\n\n' +
+    'Limitation of Liability\n\n' +
+    'Nothing in these Terms excludes or limits liability that cannot lawfully be excluded or limited.\n\n' +
+    'Subject to that, Social + Sum will not be liable for indirect or consequential loss or for loss of:\n\n' +
+    'profit;\n' +
+    'revenue;\n' +
+    'anticipated savings;\n' +
+    'business;\n' +
+    'opportunity;\n' +
+    'goodwill; or\n' +
+    'data,\n\n' +
+    'except where such liability cannot lawfully be excluded.\n\n' +
+    'Subject to any liability that cannot lawfully be limited, Social + Sum\'s total aggregate liability arising out of or in connection with an engagement will be limited to the total fees paid or payable to Social + Sum under that engagement during the period specified in the applicable proposal or order form.\n\n' +
+    'Nothing in this clause limits liability arising from fraud or fraudulent misrepresentation or any other liability which cannot legally be excluded or limited.\n\n' +
+    'The Client acknowledges that paid advertising, third-party platforms, software and customer behaviour involve risks outside Social + Sum\'s control.\n\n' +
+    'Indemnity for Client-Supplied Materials\n\n' +
+    'The Client remains responsible for ensuring that materials, data, claims and instructions supplied to Social + Sum can lawfully be used for the agreed purpose.\n\n' +
+    'Where the Client provides materials or instructions that infringe a third party\'s rights or breach applicable law, the Client remains responsible for the consequences of those materials or instructions.\n\n' +
+    'Nothing in this clause requires the Client to indemnify Social + Sum for losses caused by Social + Sum\'s own negligence, wilful misconduct or breach of its legal obligations.\n\n' +
+    'Force Majeure\n\n' +
+    'Neither party will be liable for delay or failure to perform obligations where the delay or failure results from circumstances reasonably outside that party\'s control.\n\n' +
+    'This may include:\n\n' +
+    'advertising platform outages;\n' +
+    'significant technology failures;\n' +
+    'cyber incidents;\n' +
+    'internet disruption;\n' +
+    'changes to third-party platforms;\n' +
+    'government action;\n' +
+    'natural disasters;\n' +
+    'strikes;\n' +
+    'significant market disruption; or\n' +
+    'other events outside the affected party\'s reasonable control.\n' +
+    'Independent Contractor\n\n' +
+    'Social + Sum acts as an independent contractor.\n\n' +
+    'Nothing in these Terms creates an employment relationship, partnership, joint venture or general agency relationship between the parties.\n\n' +
+    'Testimonials and Case Studies\n\n' +
+    'Social + Sum will not publicly identify the Client, publish its results or use its logo as a testimonial or case study without the Client\'s permission.\n\n' +
+    'Where the Client provides written permission or a testimonial for marketing purposes, Social + Sum may use that material for legitimate promotional purposes subject to any restrictions agreed between the parties.\n\n' +
+    'Changes to the Business\n\n' +
+    'The Client must notify Social + Sum of material changes to its business that could affect the services.\n\n' +
+    'This may include changes to:\n\n' +
+    'pricing;\n' +
+    'services;\n' +
+    'geographic coverage;\n' +
+    'availability;\n' +
+    'ideal customer;\n' +
+    'project minimums;\n' +
+    'consultation process;\n' +
+    'website;\n' +
+    'branding; or\n' +
+    'sales process.\n\n' +
+    'A material change may require the parties to review the scope, strategy, timeline or guarantee.\n\n' +
+    'Social + Sum is not required to maintain a guarantee where the underlying assumptions of the guarantee have materially changed and the parties have not agreed an updated arrangement.\n\n' +
+    'Changes to the Services\n\n' +
+    'Social + Sum may reasonably adjust its methods, tools and processes where necessary to deliver the agreed objectives.\n\n' +
+    'We will not materially reduce the agreed scope without the Client\'s agreement.\n\n' +
+    'Where a third-party platform changes its functionality, Social + Sum may need to adapt the delivery method accordingly.\n\n' +
+    'Subcontractors and Service Providers\n\n' +
+    'Social + Sum may use trusted contractors or service providers where reasonably necessary to deliver the services.\n\n' +
+    'Where those providers process personal data on behalf of the Client, the applicable Data Processing Agreement provisions relating to subprocessors will apply.\n\n' +
+    'Social + Sum remains responsible for its contractual obligations to the Client in relation to authorised subcontractors, subject to these Terms.\n\n' +
+    'Data Processing Agreement\n\n' +
+    'Where Social + Sum processes personal data on behalf of the Client, this section forms a Data Processing Agreement between the Client as Controller and Social + Sum as Processor.\n\n' +
+    'Subject Matter\n\n' +
+    'Social + Sum may process personal data for the purpose of providing the agreed marketing, lead generation, CRM, automation, reporting and client acquisition services.\n\n' +
+    'Processing may include collecting, recording, organising, storing, accessing, structuring, updating, retrieving, transmitting and deleting personal data where required to provide the services.\n\n' +
+    'Duration\n\n' +
+    'Processing will continue for the duration of the engagement and for any limited period reasonably required to complete deletion, return, handover or other post-termination obligations.\n\n' +
+    'Categories of Personal Data\n\n' +
+    'Depending on the services, personal data may include:\n\n' +
+    'names;\n' +
+    'business contact details;\n' +
+    'email addresses;\n' +
+    'telephone numbers;\n' +
+    'company information;\n' +
+    'enquiry information;\n' +
+    'project requirements;\n' +
+    'budget information;\n' +
+    'communication records;\n' +
+    'appointment information;\n' +
+    'CRM records;\n' +
+    'marketing preferences;\n' +
+    'lead-source information; and\n' +
+    'other information provided by or on behalf of the Client.\n\n' +
+    'The parties should identify any special category or sensitive personal data separately before such data is processed.\n\n' +
+    'Categories of Data Subjects\n\n' +
+    'Data subjects may include:\n\n' +
+    'prospective customers;\n' +
+    'existing customers;\n' +
+    'business contacts;\n' +
+    'website visitors;\n' +
+    'marketing leads;\n' +
+    'enquiry contacts; and\n' +
+    'other individuals whose personal data is provided to Social + Sum by the Client.\n' +
+    'Controller Instructions\n\n' +
+    'Social + Sum will process personal data only on documented instructions from the Client unless required to do otherwise by UK law.\n\n' +
+    'The Client\'s documented instructions may be provided through the agreed scope, proposal, CRM configuration, written instructions or other recorded communication.\n\n' +
+    'Social + Sum will notify the Client if it reasonably believes an instruction infringes applicable data protection law.\n\n' +
+    'Confidentiality\n\n' +
+    'Social + Sum will ensure that persons authorised to process personal data are subject to appropriate confidentiality obligations.\n\n' +
+    'Access to personal data will be limited to those who reasonably require it to provide the services.\n\n' +
+    'Security\n\n' +
+    'Social + Sum will maintain appropriate technical and organisational measures designed to protect personal data against accidental or unlawful destruction, loss, alteration, unauthorised disclosure or access.\n\n' +
+    'Measures may include:\n\n' +
+    'appropriate access controls;\n' +
+    'password protection;\n' +
+    'multi-factor authentication where available and appropriate;\n' +
+    'secure systems;\n' +
+    'restricted access;\n' +
+    'appropriate device security;\n' +
+    'secure handling of credentials; and\n' +
+    'reasonable procedures for identifying and responding to security incidents.\n\n' +
+    'The level of security will take into account the nature of the processing and the risks involved.\n\n' +
+    'Subprocessors\n\n' +
+    'The Client gives Social + Sum general authorisation to use appropriate third-party service providers where reasonably necessary to provide the services.\n\n' +
+    'This may include CRM, advertising, email, SMS, analytics, hosting and automation providers.\n\n' +
+    'Social + Sum will remain responsible for entering into appropriate contractual arrangements with subprocessors where required.\n\n' +
+    'Social + Sum will provide information about material changes to subprocessors where required by applicable law.\n\n' +
+    'The Client may raise a reasonable data protection objection to a proposed subprocessor.\n\n' +
+    'Data Subject Requests\n\n' +
+    'Taking into account the nature of the processing, Social + Sum will provide reasonable assistance to the Client where necessary for the Client to respond to lawful requests from data subjects.\n\n' +
+    'This may include requests relating to:\n\n' +
+    'access;\n' +
+    'correction;\n' +
+    'deletion;\n' +
+    'restriction;\n' +
+    'objection; and\n' +
+    'other applicable data protection rights.\n\n' +
+    'Social + Sum will not respond directly to a data subject request unless instructed by the Client or required by law.\n\n' +
+    'Personal Data Breaches\n\n' +
+    'Social + Sum will notify the Client without undue delay after becoming aware of a personal data breach affecting personal data processed on behalf of the Client.\n\n' +
+    'Where reasonably possible, the notification will include information available about:\n\n' +
+    'the nature of the breach;\n' +
+    'the categories of data affected;\n' +
+    'the likely consequences; and\n' +
+    'measures taken or proposed to address the incident.\n\n' +
+    'The Client remains responsible for determining whether a breach must be reported to the ICO or affected individuals unless otherwise agreed.\n\n' +
+    'Assistance\n\n' +
+    'Taking into account the nature of the processing and information available to Social + Sum, Social + Sum will provide reasonable assistance to the Client with:\n\n' +
+    'security obligations;\n' +
+    'personal data breach obligations;\n' +
+    'data protection impact assessments where applicable;\n' +
+    'regulatory consultations where applicable; and\n' +
+    'other obligations arising under applicable data protection law.\n\n' +
+    'Any assistance requiring substantial additional work may be chargeable where permitted by the agreement.\n\n' +
+    'International Transfers\n\n' +
+    'Where personal data is transferred outside the UK, the parties will take appropriate steps to ensure that the transfer is permitted under applicable data protection law.\n\n' +
+    'The Client acknowledges that third-party platforms used in the services may process data internationally.\n\n' +
+    'Return and Deletion\n\n' +
+    'At the end of the engagement, Social + Sum will, at the Client\'s choice, return or delete personal data processed on the Client\'s behalf, unless applicable law requires continued retention.\n\n' +
+    'The Client should communicate its preferred return or deletion requirement at the end of the engagement.\n\n' +
+    'Social + Sum may retain information where required for legal, accounting, insurance, dispute-resolution or regulatory purposes, subject to applicable data protection obligations.\n\n' +
+    'Audit and Compliance Information\n\n' +
+    'Social + Sum will provide reasonable information necessary to demonstrate compliance with its processor obligations.\n\n' +
+    'Where required by applicable data protection law, Social + Sum will cooperate with reasonable audits or inspections by the Client or an auditor appointed by the Client.\n\n' +
+    'Audits must:\n\n' +
+    'be reasonable in scope;\n' +
+    'take account of confidentiality;\n' +
+    'avoid unnecessary disruption;\n' +
+    'not expose information relating to other clients; and\n' +
+    'be subject to reasonable security requirements.\n\n' +
+    'The Client will bear its own audit costs unless applicable law requires otherwise.\n\n' +
+    'Privacy and Marketing Data\n\n' +
+    'Nothing in these Terms transfers the Client\'s responsibility for determining whether personal data may lawfully be collected, used or marketed to.\n\n' +
+    'Where Social + Sum uses personal data for its own independent purposes rather than solely on the Client\'s instructions, Social + Sum may act as a separate controller for that processing.\n\n' +
+    'The parties will cooperate to identify the appropriate role for each processing activity.\n\n' +
+    'Handover of Personal Data\n\n' +
+    'On termination, the parties will cooperate to ensure that personal data is appropriately returned, transferred or deleted in accordance with the Data Processing Agreement.\n\n' +
+    'The Client remains responsible for ensuring that any new provider receiving personal data is lawfully entitled to receive it.\n\n' +
+    'Entire Agreement\n\n' +
+    'These Terms and the documents incorporated into them constitute the entire agreement between Social + Sum and the Client regarding the services.\n\n' +
+    'They replace previous discussions or understandings relating to the same services unless expressly incorporated into the agreement.\n\n' +
+    'Severability\n\n' +
+    'If any provision of these Terms is found to be invalid or unenforceable, the remaining provisions will continue to apply.\n\n' +
+    'The parties will seek to replace the affected provision with a lawful provision that most closely reflects the original commercial intention.\n\n' +
+    'No Waiver\n\n' +
+    'A failure or delay by either party to enforce a right under these Terms does not constitute a waiver of that right.\n\n' +
+    'Governing Law\n\n' +
+    'These Terms and the agreement between Social + Sum and the Client are governed by the laws of England and Wales.\n\n' +
+    'The courts of England and Wales will have jurisdiction over disputes, subject to any mandatory rights or protections that apply by law.\n\n' +
+    'Acceptance\n\n' +
+    'By signing a proposal, accepting an order, paying an invoice, instructing Social + Sum to begin work or otherwise proceeding with the services, the Client confirms that it has read, understood and agreed to these Terms and the documents incorporated into them.\n';
+
+  // ---- Builds a real, branded PDF with no external library and no popup ----
+  // (Both earlier attempts failed for platform reasons: a CDN script got blocked by this
+  // artifact preview's CSP, and a separate print tab got blocked as a pop-up. This writes
+  // PDF bytes directly, so nothing here can be blocked the same way.)
+  async function getSignatureImageData(sigPrefix){
+    var src = sigPads[sigPrefix || 'tos'].canvas;
+    // use the canvas's actual bitmap size (src.width/height), not its CSS layout size
+    // (clientWidth/clientHeight) — the latter is 0 whenever this step is hidden, which is
+    // exactly the case when downloading from the review step, and getImageData(0,0,0,0)
+    // throws, silently failing the whole download.
+    var w = src.width, h = src.height;
+
+    // downscale before embedding — a signature pad captured at full device-pixel
+    // resolution (e.g. 3x on a retina screen) can be a few thousand pixels wide, and this
+    // PDF embeds it as raw, uncompressed RGB. Uncapped, that alone is easily 1-2MB before
+    // base64, which is what was tripping EmailJS's request-size limit (413 Content Too
+    // Large) even for a single document. Capping the longest side keeps the signature
+    // perfectly legible at the size it's actually printed while cutting that down hugely.
+    var maxDim = 480;
+    var scale = Math.min(1, maxDim / Math.max(w, h));
+    var outW = Math.max(1, Math.round(w * scale));
+    var outH = Math.max(1, Math.round(h * scale));
+
+    var out = document.createElement('canvas');
+    out.width = outW; out.height = outH;
+    var octx = out.getContext('2d');
+    octx.fillStyle = '#ffffff'; octx.fillRect(0, 0, outW, outH);
+    octx.drawImage(src, 0, 0, outW, outH);
+
+    var imgData = octx.getImageData(0, 0, outW, outH).data;
+    var rgb = new Uint8Array(outW * outH * 3);
+    for (var i = 0, j = 0; i < imgData.length; i += 4, j += 3){
+      rgb[j] = imgData[i]; rgb[j+1] = imgData[i+1]; rgb[j+2] = imgData[i+2];
+    }
+
+    // compress on top of the downscale — a signature is almost entirely solid white, so
+    // deflate typically shrinks it by 90%+ more, which is what actually gets this under
+    // EmailJS's request-size limit rather than just closer to it.
+    var compressed = await deflateBytes(rgb);
+    if (compressed && compressed.length < rgb.length){
+      return { data: compressed, width: outW, height: outH, flate: true };
+    }
+    return { data: rgb, width: outW, height: outH, flate: false };
+  }
+
+  // Section headings, exactly as they appear in tosText — used to tell a heading line
+  // apart from an ordinary sentence so it can be set in the brand's serif display face
+  // (Newsreader on the site; Times-Bold is its closest built-in-PDF equivalent, since
+  // embedding the actual webfont isn't practical in a hand-built PDF byte stream).
+  var tosHeadingsList = [
+    'Agreement Structure',
+    'Services',
+    'Scope of Work',
+    'Meetings, Communication and Revisions',
+    'Fees and Payment',
+    'Commitment, Cancellation and Early Termination',
+    'Refunds',
+    'Client Responsibilities',
+    'Client Response Obligations',
+    'Advertising Accounts and Advertising Spend',
+    'Third-Party Platforms',
+    'Account Ownership',
+    'Intellectual Property',
+    'Creative Approval',
+    'Client Delays',
+    'Handover',
+    'Data Protection',
+    'Marketing Compliance',
+    'Confidentiality',
+    'Guarantee',
+    'Performance Reporting',
+    'No Guaranteed Commercial Outcome',
+    'Suspension',
+    'Limitation of Liability',
+    'Indemnity for Client-Supplied Materials',
+    'Force Majeure',
+    'Independent Contractor',
+    'Testimonials and Case Studies',
+    'Changes to the Business',
+    'Changes to the Services',
+    'Subcontractors and Service Providers',
+    'Data Processing Agreement',
+    'Subject Matter',
+    'Duration',
+    'Categories of Personal Data',
+    'Categories of Data Subjects',
+    'Controller Instructions',
+    'Security',
+    'Subprocessors',
+    'Data Subject Requests',
+    'Personal Data Breaches',
+    'Assistance',
+    'International Transfers',
+    'Return and Deletion',
+    'Audit and Compliance Information',
+    'Privacy and Marketing Data',
+    'Handover of Personal Data',
+    'Entire Agreement',
+    'Severability',
+    'No Waiver',
+    'Governing Law',
+    'Acceptance'
+  ];
+  var guaranteeHeadings = ['Your Guarantee'];
+  var guaranteeText =
+    'Your Guarantee\n\n' +
+    'As part of your engagement, your agreement includes a performance guarantee designed to give you additional confidence in the process.\n\n' +
+    'Because every client has a different market, average project value, service area, ad budget and sales process, the specific guarantee metrics and thresholds are not one-size-fits-all.\n\n' +
+    'Rather than asking you to sign a generic guarantee during onboarding, we will provide your individual Guarantee Document separately once your campaign and commercial parameters have been confirmed.\n\n' +
+    'That document will clearly set out:\n\n' +
+    'The specific performance metric being guaranteed\n' +
+    'The agreed target or maximum threshold\n' +
+    'What we consider a qualified opportunity\n' +
+    'The timeframe over which the guarantee applies\n' +
+    'Your responsibilities for the guarantee to remain valid, including lead-response requirements\n' +
+    'What happens if the agreed performance threshold is not achieved\n\n' +
+    'The purpose of the guarantee is to ensure that the part of the process we control is measurable and accountable. We do not guarantee closed clients or revenue, as those outcomes also depend on factors outside our control, including your consultation, quoting and closing process.\n\n' +
+    'Your individual guarantee will therefore be agreed based on the economics and requirements of your business, rather than applying an arbitrary figure across every client.\n\n' +
+    'You will receive and sign the separate Guarantee Document before your campaign goes live.\n';
+
+  async function buildTosPdfBytes(){
+    return await buildSignedPdfBytes(tosText, tosHeadingsList, 'TERMS OF SERVICE - SIGNED COPY', 'tos', 'tosSig');
+  }
+  async function buildGuaranteePdfBytes(){
+    return await buildSignedPdfBytes(guaranteeText, guaranteeHeadings, 'GUARANTEE - SIGNED COPY', 'g', 'gSig');
+  }
+
+  // compresses raw bytes with the browser's built-in deflate (zlib format, matching what
+  // PDF's /FlateDecode filter expects) — a signature is mostly solid white with a few thin
+  // dark strokes, so this typically shrinks it by 90%+ on top of the earlier downscale.
+  // Falls back to null (embed uncompressed) on older browsers without CompressionStream.
+  async function deflateBytes(bytes){
+    if (typeof CompressionStream === 'undefined') return null;
+    try{
+      var cs = new CompressionStream('deflate');
+      var writer = cs.writable.getWriter();
+      writer.write(bytes);
+      writer.close();
+      var chunks = [];
+      var reader = cs.readable.getReader();
+      while (true){
+        var r = await reader.read();
+        if (r.done) break;
+        chunks.push(r.value);
+      }
+      var total = chunks.reduce(function(n, c){ return n + c.length; }, 0);
+      var out = new Uint8Array(total);
+      var pos = 0;
+      chunks.forEach(function(c){ out.set(c, pos); pos += c.length; });
+      return out;
+    }catch(e){ return null; }
+  }
+
+  async function buildSignedPdfBytes(bodyText, headingsList, subtitleLabel, sigPrefix, sigFieldId){
+    var PAGE_W = 595, PAGE_H = 842, MARGIN = 54, MAXW = PAGE_W - MARGIN * 2;
+    var mctx = document.createElement('canvas').getContext('2d');
+
+    function sanitizeAscii(s){
+      return s
+        .replace(/[‘’]/g, "'")
+        .replace(/[“”]/g, '"')
+        .replace(/[–—]/g, '-')
+        .replace(/…/g, '...')
+        .replace(/[^\x00-\x7E]/g, '');
+    }
+    function textWidth(str, size, serif){
+      mctx.font = (serif ? 'bold ' : '') + size + 'px ' + (serif ? 'Georgia, Times, serif' : 'Helvetica, Arial, sans-serif');
+      return mctx.measureText(str).width;
+    }
+    // font-key aware width measurement, for laying out mixed-style runs (the wordmark)
+    var FONT_CSS = {
+      F1: { style: '', family: 'Helvetica, Arial, sans-serif' },
+      F2: { style: 'bold ', family: 'Helvetica, Arial, sans-serif' },
+      F3: { style: 'bold ', family: 'Georgia, Times, serif' },
+      F4: { style: 'italic ', family: 'Georgia, Times, serif' }
+    };
+    function textWidthF(str, size, font){
+      var f = FONT_CSS[font] || FONT_CSS.F1;
+      mctx.font = f.style + size + 'px ' + f.family;
+      return mctx.measureText(str).width;
+    }
+    // draws the "Social+Sum." wordmark as its brand-correct mixed run: "Social" upright/bold,
+    // "+Sum" in the italic serif accent face, "." in coral — same treatment as the site's
+    // nav/footer lockup (Social<span class="em">+Sum</span><span class="dot">.</span>) — and
+    // returns the total width drawn, so callers can right-align or center it.
+    function wordmark(x, yy, size, r, g, b, pushFn){
+      var segs = [
+        { t: 'Social', font: 'F2', r: r, g: g, b: b },
+        { t: '+Sum', font: 'F4', r: r, g: g, b: b },
+        { t: '.', font: 'F2', r: 226, g: 99, b: 122 }
+      ];
+      var cx = x;
+      segs.forEach(function(seg){
+        pushFn(textOp(cx, yy, size, seg.font, seg.r, seg.g, seg.b, seg.t));
+        cx += textWidthF(seg.t, size, seg.font);
+      });
+      return cx - x;
+    }
+    function wrap(line, size, serif){
+      var words = line.split(' '); var out = []; var cur = '';
+      words.forEach(function(w){
+        var t = cur ? cur + ' ' + w : w;
+        if (textWidth(t, size, serif) > MAXW && cur){ out.push(cur); cur = w; } else cur = t;
+      });
+      if (cur) out.push(cur);
+      return out;
+    }
+
+    var pages = [[]]; var y = PAGE_H - 96;
+    function op(s){ pages[pages.length - 1].push(s); }
+    function ensure(h){ if (y - h < 60){ pages.push([]); y = PAGE_H - 60; } }
+    function esc(s){ return sanitizeAscii(s).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)'); }
+    function textOp(x, yy, size, font, r, g, b, str){
+      return 'BT /' + font + ' ' + size + ' Tf ' + (r/255).toFixed(3) + ' ' + (g/255).toFixed(3) + ' ' + (b/255).toFixed(3) + ' rg ' + x.toFixed(2) + ' ' + yy.toFixed(2) + ' Td (' + esc(str) + ') Tj ET';
+    }
+    function text(x, yy, size, font, r, g, b, str){
+      // back-compat: a boolean here means "bold Helvetica", as before
+      if (font === true) font = 'F2'; else if (font === false) font = 'F1';
+      op(textOp(x, yy, size, font, r, g, b, str));
+    }
+    function rectOp(x, yy, w, h, r, g, b){
+      return (r/255).toFixed(3)+' '+(g/255).toFixed(3)+' '+(b/255).toFixed(3)+' rg '+x.toFixed(2)+' '+yy.toFixed(2)+' '+w.toFixed(2)+' '+h.toFixed(2)+' re f';
+    }
+    function rect(x, yy, w, h, r, g, b){ op(rectOp(x, yy, w, h, r, g, b)); }
+    function strokePolylineOps(points, widthPt, r, g, b){
+      return [
+        widthPt.toFixed(2) + ' w 1 J 1 j ' + (r/255).toFixed(3) + ' ' + (g/255).toFixed(3) + ' ' + (b/255).toFixed(3) + ' RG',
+        points.map(function(p, i){ return p[0].toFixed(2) + ' ' + p[1].toFixed(2) + ' ' + (i === 0 ? 'm' : 'l'); }).join(' ') + ' S'
+      ];
+    }
+    function strokePolyline(points, widthPt, r, g, b){
+      strokePolylineOps(points, widthPt, r, g, b).forEach(op);
+    }
+    function fillCircleOps(cx, cy, rad, r, g, b){
+      var k = 0.5523 * rad;
+      return [
+        (r/255).toFixed(3) + ' ' + (g/255).toFixed(3) + ' ' + (b/255).toFixed(3) + ' rg',
+        (cx+rad).toFixed(2) + ' ' + cy.toFixed(2) + ' m',
+        (cx+rad).toFixed(2)+' '+(cy+k).toFixed(2)+' '+(cx+k).toFixed(2)+' '+(cy+rad).toFixed(2)+' '+cx.toFixed(2)+' '+(cy+rad).toFixed(2)+' c',
+        (cx-k).toFixed(2)+' '+(cy+rad).toFixed(2)+' '+(cx-rad).toFixed(2)+' '+(cy+k).toFixed(2)+' '+(cx-rad).toFixed(2)+' '+cy.toFixed(2)+' c',
+        (cx-rad).toFixed(2)+' '+(cy-k).toFixed(2)+' '+(cx-k).toFixed(2)+' '+(cy-rad).toFixed(2)+' '+cx.toFixed(2)+' '+(cy-rad).toFixed(2)+' c',
+        (cx+k).toFixed(2)+' '+(cy-rad).toFixed(2)+' '+(cx+rad).toFixed(2)+' '+(cy-k).toFixed(2)+' '+(cx+rad).toFixed(2)+' '+cy.toFixed(2)+' c',
+        'f'
+      ];
+    }
+    function fillCircle(cx, cy, rad, r, g, b){
+      fillCircleOps(cx, cy, rad, r, g, b).forEach(op);
+    }
+
+    // the brand's paper background, not plain white, behind everything on page 1
+    // (every other page gets this same fill in the per-page footer pass below)
+    rect(0, 0, PAGE_W, PAGE_H, 242, 240, 234);
+    rect(0, PAGE_H - 64, PAGE_W, 64, 22, 34, 43);
+    // the same chevron mark + coral dot used in the site's nav and footer lockup, scaled
+    // from its 100x100 viewBox (points 30,28 70,28 40,50 70,72 30,72) into a 24x24pt box
+    var markScale = 24 / 100, markX = MARGIN, markBoxBottom = PAGE_H - 32 - 12;
+    function mk(px, py){ return [markX + px * markScale, markBoxBottom + (100 - py) * markScale]; }
+    strokePolyline([mk(30,28), mk(70,28), mk(40,50), mk(70,72), mk(30,72)], 1.9, 217, 164, 65);
+    var dot = mk(72, 26);
+    fillCircle(dot[0], dot[1], 6 * markScale, 226, 99, 122);
+    // brand-correct wordmark: "Social" upright/bold, "+Sum" in the italic accent face, coral dot
+    wordmark(MARGIN + 32, PAGE_H - 38, 16, 242, 240, 234, op);
+    text(MARGIN + 32, PAGE_H - 50, 10, 'F1', 217, 164, 65, subtitleLabel);
+
+    bodyText.split('\n\n').forEach(function(block){
+      block.split('\n').forEach(function(line){
+        var isHeading = headingsList.indexOf(line.trim()) !== -1;
+        var size = isHeading ? 13 : 10.5;
+        var lh = isHeading ? 19 : 14;
+        var font = isHeading ? 'F3' : 'F1';
+        wrap(line, size, isHeading).forEach(function(w){
+          ensure(lh);
+          text(MARGIN, y, size, font, isHeading ? 180 : 22, isHeading ? 130 : 34, isHeading ? 44 : 43, w);
+          y -= lh;
+        });
+      });
+      y -= isHeading_gap(block);
+    });
+    function isHeading_gap(block){
+      return headingsList.indexOf(block.trim()) !== -1 ? 4 : 8;
+    }
+
+    ensure(120);
+    y -= 10;
+    rect(MARGIN, y, PAGE_W - MARGIN * 2, 1.4, 217, 164, 65);
+    y -= 22;
+    text(MARGIN, y, 10.5, 'F2', 22, 34, 43, 'Signed by');
+    y -= 8;
+
+    var sigInfo = await getSignatureImageData(sigPrefix);
+    var imgDrawW = 160, imgDrawH = imgDrawW * (sigInfo.height / sigInfo.width);
+    if (imgDrawH > 70){ imgDrawH = 70; imgDrawW = imgDrawH * (sigInfo.width / sigInfo.height); }
+    var imgY = y - imgDrawH;
+    op('q ' + imgDrawW.toFixed(2) + ' 0 0 ' + imgDrawH.toFixed(2) + ' ' + MARGIN.toFixed(2) + ' ' + imgY.toFixed(2) + ' cm /Im0 Do Q');
+    y = imgY - 16;
+    // set in the same italic serif style as the on-screen signature field (Newsreader italic there;
+    // Times-Italic is its closest built-in-PDF equivalent)
+    text(MARGIN, y, 15, 'F4', 22, 34, 43, val(sigFieldId) || '-');
+    y -= 15;
+    text(MARGIN, y, 9.5, 'F1', 78, 91, 98, 'Signed electronically on ' + dateStr);
+    y -= 4;
+
+    // ---- backdrop + footer branding on every page: paper background, small mark +
+    // wordmark + page number. The background goes in at the FRONT of each page's ops
+    // (unshift) so it paints behind the page's own content instead of over it.
+    var totalPages = pages.length;
+    pages.forEach(function(pageOps, i){
+      if (i > 0){
+        // page 1 already has its own paper-background fill drawn first
+        pageOps.unshift(rectOp(0, 0, PAGE_W, PAGE_H, 242, 240, 234));
+      }
+      var by = 34;
+      var fmScale = 11 / 100, fmX = MARGIN, fmBottom = by - 5;
+      function fmk(px, py){ return [fmX + px * fmScale, fmBottom + (100 - py) * fmScale]; }
+      strokePolylineOps([fmk(30,28), fmk(70,28), fmk(40,50), fmk(70,72), fmk(30,72)], 1.1, 217, 164, 65).forEach(function(o){ pageOps.push(o); });
+      var fdot = fmk(72, 26);
+      fillCircleOps(fdot[0], fdot[1], 6 * fmScale, 226, 99, 122).forEach(function(o){ pageOps.push(o); });
+      wordmark(MARGIN + 15, by, 8, 22, 34, 43, function(o){ pageOps.push(o); });
+      var pageLabel = 'Page ' + (i + 1) + ' of ' + totalPages;
+      var pw = textWidth(pageLabel, 8, false);
+      pageOps.push(textOp(PAGE_W - MARGIN - pw, by, 8, 'F1', 78, 91, 98, pageLabel));
+    });
+
+    // ---- assemble the PDF bytes ----
+    var enc = new TextEncoder();
+    var parts = []; var offset = 0;
+    function push(bytes){ parts.push(bytes); offset += bytes.length; }
+    function pushStr(s){ push(enc.encode(s)); }
+    var offsets = [];
+    function beginObj(num){ offsets[num] = offset; pushStr(num + ' 0 obj\n'); }
+
+    pushStr('%PDF-1.4\n');
+    var numPages = pages.length;
+    var pageObjNums = [], contentObjNums = [];
+    var imageObjNum = 7, nextNum = 8;
+    pages.forEach(function(){ pageObjNums.push(nextNum++); contentObjNums.push(nextNum++); });
+
+    beginObj(1); pushStr('<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
+    beginObj(2); pushStr('<< /Type /Pages /Kids [' + pageObjNums.map(function(n){ return n + ' 0 R'; }).join(' ') + '] /Count ' + numPages + ' >>\nendobj\n');
+    beginObj(3); pushStr('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\nendobj\n');
+    beginObj(4); pushStr('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>\nendobj\n');
+    // F3/F4: the brand's serif display and signature faces (Newsreader, Newsreader italic on
+    // the site) don't ship as one of the PDF's 14 built-in fonts, so Times-Bold and Times-Italic
+    // stand in for them here rather than embedding the webfont in this hand-built PDF.
+    beginObj(5); pushStr('<< /Type /Font /Subtype /Type1 /BaseFont /Times-Bold /Encoding /WinAnsiEncoding >>\nendobj\n');
+    beginObj(6); pushStr('<< /Type /Font /Subtype /Type1 /BaseFont /Times-Italic /Encoding /WinAnsiEncoding >>\nendobj\n');
+
+    beginObj(imageObjNum);
+    pushStr('<< /Type /XObject /Subtype /Image /Width ' + sigInfo.width + ' /Height ' + sigInfo.height + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 ' + (sigInfo.flate ? '/Filter /FlateDecode ' : '') + '/Length ' + sigInfo.data.length + ' >>\nstream\n');
+    push(sigInfo.data);
+    pushStr('\nendstream\nendobj\n');
+
+    pages.forEach(function(ops, i){
+      var pageNum = pageObjNums[i], contentNum = contentObjNums[i];
+      var streamBytes = enc.encode(ops.join('\n') + '\n');
+      beginObj(contentNum);
+      pushStr('<< /Length ' + streamBytes.length + ' >>\nstream\n');
+      push(streamBytes);
+      pushStr('\nendstream\nendobj\n');
+
+      beginObj(pageNum);
+      pushStr('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + PAGE_W + ' ' + PAGE_H + '] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> /XObject << /Im0 ' + imageObjNum + ' 0 R >> >> /Contents ' + contentNum + ' 0 R >>\nendobj\n');
+    });
+
+    var xrefOffset = offset;
+    var maxNum = Math.max.apply(null, Object.keys(offsets).map(Number));
+    pushStr('xref\n0 ' + (maxNum + 1) + '\n0000000000 65535 f \n');
+    for (var n = 1; n <= maxNum; n++){
+      pushStr(String(offsets[n] || 0).padStart(10, '0') + ' 00000 n \n');
+    }
+    pushStr('trailer\n<< /Size ' + (maxNum + 1) + ' /Root 1 0 R >>\nstartxref\n' + xrefOffset + '\n%%EOF');
+
+    var total = parts.reduce(function(sum, p){ return sum + p.length; }, 0);
+    var out = new Uint8Array(total); var pos = 0;
+    parts.forEach(function(p){ out.set(p, pos); pos += p.length; });
+    return out;
+  }
+
+  async function downloadPdfBytes(bytes, filename){
+    var blob = new Blob([bytes], { type: 'application/pdf' });
+    try{
+      if (window.claude && typeof window.claude.use === 'function'){
+        var downloads = await window.claude.use('downloads');
+        if (downloads){
+          await downloads.save({ filename: filename, data: blob });
+          return;
+        }
+      }
+    }catch(e){ /* fall through to the plain browser download, works once this is on your own domain */ }
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  async function downloadTos(){
+    await downloadPdfBytes(await buildTosPdfBytes(), 'Social+Sum Terms of Service - ' + (val('tosSig') || 'signed') + '.pdf');
+  }
+
+  // downloads both signed documents — the Terms of Service and the Guarantee — from a
+  // single button press, one after the other. Used on the review step, once both are signed.
+  async function downloadAllSignedDocs(){
+    var nameSuffix = val('tosSig') || val('gSig') || 'signed';
+    await downloadPdfBytes(await buildTosPdfBytes(), 'Social+Sum Terms of Service - ' + nameSuffix + '.pdf');
+    await downloadPdfBytes(await buildGuaranteePdfBytes(), 'Social+Sum Guarantee - ' + nameSuffix + '.pdf');
+  }
+
+  // base64-encodes PDF bytes for the EmailJS "variable attachment" param — chunked so a large
+  // typed array doesn't overflow the call stack that String.fromCharCode.apply would hit at once.
+  function bytesToBase64(bytes){
+    var chunk = 8192, binary = '';
+    for (var i = 0; i < bytes.length; i += chunk){
+      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+    }
+    return btoa(binary);
+  }
+
+  // emails hello@socialandsum.com a copy of both signed PDFs as attachments, once, when the
+  // client reaches the review step with both documents signed. Best-effort: EmailJS needs its
+  // "Variable Attachment" fields set up on the template (see reply) for the files to actually
+  // attach — without that, this silently sends the text-only fallback with no attachment.
+  var docsEmailed = false;
+  // emails hello@socialandsum.com a copy of both signed PDFs, once, when the client reaches
+  // the review step with both documents signed. Sent via a Netlify Function (server-side,
+  // using Resend) rather than EmailJS from the browser — EmailJS's client-side attachment
+  // request kept hitting a size limit even after the PDF was shrunk and compressed as far
+  // as reasonably possible; a server-side send has no such ceiling.
+  async function emailSignedDocsCopy(){
+    if (docsEmailed) return;
+    if (!(val('tosSig') && val('gSig'))) return; // only once both are actually signed
+    docsEmailed = true;
+    try{
+      var nameSuffix = val('tosSig') || val('gSig') || 'signed';
+      var tosB64 = bytesToBase64(await buildTosPdfBytes());
+      var gB64 = bytesToBase64(await buildGuaranteePdfBytes());
+      var resp = await fetch('/api/send-signed-docs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studio: val('fStudio') || '—',
+          name: val('fName') || '—',
+          email: val('fEmail') || '',
+          phone: val('fPhone') || '—',
+          tos_signed: val('tosSig') || '—',
+          g_signed: val('gSig') || '—',
+          date: dateStr,
+          pdf_tos_base64: tosB64,
+          pdf_tos_name: 'Social+Sum Terms of Service - ' + nameSuffix + '.pdf',
+          pdf_guarantee_base64: gB64,
+          pdf_guarantee_name: 'Social+Sum Guarantee - ' + nameSuffix + '.pdf'
+        })
+      });
+      if (!resp.ok) throw new Error('send-signed-docs failed: ' + resp.status);
+    }catch(e){ docsEmailed = false; /* let it retry on the next visit to step 4 */ }
+  }
+
+  function checkG(){
+    var ok = document.getElementById('gAgree').checked && document.getElementById('gSig').value.trim().length > 1 && sigPads.g.hasInk();
+    document.getElementById('gNext').classList.toggle('btn-ready', ok);
+  }
+
+  function detailsContinueClick(){
+    var requiredIds = ['fStudio', 'fName', 'fEmail'];
+    var firstBad = null;
+    requiredIds.forEach(function(id){
+      var input = document.getElementById(id);
+      var field = input.closest('.field');
+      field.classList.remove('field-error');
+      // restart the shake animation on repeat clicks
+      void field.offsetWidth;
+      if (val(id).length === 0){
+        field.classList.add('field-error');
+        if (!firstBad) firstBad = input;
+      }
+    });
+    if (firstBad){
+      showFieldsModal();
+      firstBad.focus();
+      return;
+    }
+    goStep(2);
+  }
+  function showFieldsModal(){
+    document.getElementById('fieldsModal').classList.add('show');
+  }
+  document.getElementById('fieldsModalClose').addEventListener('click', function(){
+    document.getElementById('fieldsModal').classList.remove('show');
+  });
+  document.getElementById('fieldsModal').addEventListener('click', function(e){
+    if (e.target === this) this.classList.remove('show');
+  });
+  ['fStudio','fName','fEmail'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', function(){
+      this.closest('.field').classList.remove('field-error');
+    });
+  });
+  function tosContinueClick(){
+    var ok = document.getElementById('tosAgree').checked && document.getElementById('tosSig').value.trim().length > 1 && sigPads.tos.hasInk();
+    if (!ok){ alert("You can't proceed until you've read the Terms of Service, ticked the agreement box, typed your name and signed."); return; }
+    notifyOnboard('Terms of Service signed');
+    goStep(3);
+  }
+  function gContinueClick(){
+    var ok = document.getElementById('gAgree').checked && document.getElementById('gSig').value.trim().length > 1 && sigPads.g.hasInk();
+    if (!ok){ alert("You can't proceed until you've read the guarantee, ticked the agreement box, typed your name and signed."); return; }
+    goStep(4);
+  }
+  document.getElementById('gAgree').addEventListener('change', checkG);
+  document.getElementById('gSig').addEventListener('input', checkG);
+
+  function val(id){ return document.getElementById(id).value.trim(); }
+
+  function buildReview(){
+    var rl = document.getElementById('reviewList');
+    rl.innerHTML =
+      '<dt>Studio</dt><dd>' + esc(val('fStudio')) + '</dd>' +
+      '<dt>Contact</dt><dd>' + esc(val('fName')) + '</dd>' +
+      '<dt>Email</dt><dd>' + esc(val('fEmail')) + '</dd>' +
+      '<dt>Phone</dt><dd>' + esc(val('fPhone') || '—') + '</dd>' +
+      '<dt>Terms of Service</dt><dd>Signed by ' + esc(val('tosSig')) + ' on ' + dateStr + '</dd>' +
+      '<dt>Guarantee</dt><dd>Signed by ' + esc(val('gSig')) + ' on ' + dateStr + '</dd>';
+  }
+
+  function esc(s){
+    var d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+  }
+
+  function prepareSubmission(){
+    document.getElementById('afterSubmit').style.display = 'block';
+    document.getElementById('afterSubmit').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>

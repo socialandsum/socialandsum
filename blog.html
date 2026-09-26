@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Social + Sum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .blog-hero{ padding:80px 28px 10px; text-align:center; }
+  .blog-hero .kicker{ justify-content:center; }
+  .blog-hero p.lead{ margin:0 auto; }
+
+  .blog-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:44px;
+  }
+  @media (max-width:900px){ .blog-grid{ grid-template-columns:1fr; } }
+  .blog-card{
+    display:block; background:var(--paper-raised); border:1px solid var(--line); border-radius:14px;
+    overflow:hidden; transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+  }
+  .blog-card:hover{ transform:translateY(-6px); box-shadow:var(--shadow); }
+  .blog-thumb{ aspect-ratio:16/10; display:block; width:100%; }
+  .blog-body{ padding:24px 24px 26px; }
+  .blog-tag{
+    display:inline-block; font-size:11px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600;
+    color:var(--gold-deep); background:rgba(217,164,65,0.12); border-radius:100px; padding:4px 10px; margin-bottom:12px;
+  }
+  .blog-body h3{ font-size:17px; font-weight:600; margin:0 0 8px; line-height:1.35; }
+  .blog-body p{ font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0; }
+  .blog-meta{ font-size:12px; color:var(--ink-soft); margin-top:14px; display:flex; gap:10px; align-items:center; }
+  .blog-more{ display:inline-block; font-size:12.5px; font-weight:600; color:var(--coral); margin-top:14px; }
+
+  .blog-cta{ text-align:center; margin-top:70px; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-brand">
+    <svg class="nav-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="var(--ink)"/>
+      <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+    </svg>
+    <span class="nav-word">Social<span class="em">+Sum</span><span class="dot">.</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About us</a>
+    <a href="service.html">Service</a>
+    <a href="blog.html">Blog</a>
+  </div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <a href="book-a-call.html" class="btn btn-primary btn-sm">Book a call</a>
+    <a href="start.html" class="btn btn-sm btn-gold">Onboard</a>
+  </div>
+</nav>
+
+<header class="blog-hero wrap">
+  <div class="kicker">The blog</div>
+  <h2 style="margin:0 auto 12px;">Reading for studios, not just clients<span class="dot">.</span></h2>
+  <p class="lead">Design thinking and growth thinking, side by side. Running the studio is as much a part of the craft as the room itself.</p>
+</header>
+
+<main class="wrap" style="padding-bottom:100px;">
+  <div class="blog-grid">
+
+    <a href="blog-interior-trends-2026.html" class="blog-card reveal">
+      <svg class="blog-thumb" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="400" height="250" fill="var(--paper)"/>
+        <line x1="0" y1="170" x2="400" y2="170" stroke="var(--line)" stroke-width="2"/>
+        <path d="M60 170 L60 90 Q60 70 90 70 L150 70 Q180 70 180 100 L180 170" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="45" y1="170" x2="195" y2="170" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/>
+        <path d="M230 170 L230 110 Q230 95 245 95 Q260 95 260 110 L260 170" fill="none" stroke="var(--gold-deep)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M300 170 Q300 120 330 100 Q345 90 345 70" fill="none" stroke="var(--coral)" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="345" cy="60" r="9" fill="var(--coral)"/>
+        <circle cx="90" cy="45" r="14" fill="none" stroke="var(--gold)" stroke-width="5"/>
+      </svg>
+      <div class="blog-body">
+        <div class="blog-tag">Design</div>
+        <h3>Top interior design trends for 2026</h3>
+        <p>Warm minimalism, curved everything, and the materials studios keep coming back to this year.</p>
+        <div class="blog-meta">6 min read</div>
+        <div class="blog-more">Read the post →</div>
+      </div>
+    </a>
+
+    <a href="blog-referral-ceiling.html" class="blog-card reveal reveal-d1">
+      <svg class="blog-thumb" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="400" height="250" fill="var(--ink)"/>
+        <circle cx="90" cy="80" r="34" fill="none" stroke="var(--gold)" stroke-width="6"/>
+        <circle cx="90" cy="80" r="8" fill="var(--coral)"/>
+        <path d="M124 80 Q220 80 220 150 Q220 190 280 190" fill="none" stroke="var(--gold)" stroke-width="6" stroke-linecap="round"/>
+        <path d="M90 114 Q90 200 180 200 Q230 200 230 170" fill="none" stroke="var(--paper)" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 10" opacity="0.5"/>
+        <circle cx="280" cy="190" r="10" fill="var(--coral)"/>
+        <circle cx="320" cy="60" r="5" fill="var(--paper)" opacity="0.5"/>
+        <circle cx="345" cy="90" r="3" fill="var(--paper)" opacity="0.4"/>
+      </svg>
+      <div class="blog-body">
+        <div class="blog-tag">Studio growth</div>
+        <h3>Why referrals alone won't carry your studio through 2026</h3>
+        <p>Word of mouth got you here. Here's what happens to a pipeline that depends on it alone, and what a second channel actually needs to look like.</p>
+        <div class="blog-meta">5 min read</div>
+        <div class="blog-more">Read the post →</div>
+      </div>
+    </a>
+
+    <a href="blog-founder-story.html" class="blog-card reveal">
+      <svg class="blog-thumb" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="400" height="250" fill="var(--paper-raised)"/>
+        <circle cx="200" cy="125" r="62" fill="none" stroke="var(--line)" stroke-width="2"/>
+        <path d="M150 145 Q175 105 200 105 Q225 105 250 145" fill="none" stroke="var(--gold-deep)" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="150" cy="152" r="9" fill="var(--gold)"/>
+        <circle cx="250" cy="152" r="9" fill="var(--coral)"/>
+        <path d="M200 105 L200 70" fill="none" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="200" cy="58" r="11" fill="var(--ink)"/>
+      </svg>
+      <div class="blog-body">
+        <div class="blog-tag">Founder story</div>
+        <h3>Why I started Social + Sum, and why I want to help you</h3>
+        <p>What kept me noticing the gap between beautiful studio work and a thin pipeline, and why closing it is the work I set out to do.</p>
+        <div class="blog-meta">4 min read</div>
+        <div class="blog-more">Read the post →</div>
+      </div>
+    </a>
+
+    <a href="blog-website-conversion.html" class="blog-card reveal reveal-d1">
+      <svg class="blog-thumb" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="400" height="250" fill="var(--ink)"/>
+        <rect x="150" y="45" width="100" height="120" rx="8" fill="none" stroke="var(--paper)" stroke-width="5" opacity="0.9"/>
+        <line x1="150" y1="66" x2="250" y2="66" stroke="var(--gold)" stroke-width="3"/>
+        <circle cx="162" cy="55" r="3" fill="var(--coral)"/>
+        <path d="M80 200 Q120 160 150 145" fill="none" stroke="var(--gold)" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 12"/>
+        <circle cx="70" cy="207" r="10" fill="var(--gold-deep)"/>
+        <path d="M250 145 Q290 160 320 200" fill="none" stroke="var(--coral)" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 12"/>
+        <circle cx="330" cy="207" r="10" fill="var(--coral)" opacity="0.85"/>
+      </svg>
+      <div class="blog-body">
+        <div class="blog-tag">Marketing</div>
+        <h3>Your website is probably losing you clients before they scroll</h3>
+        <p>Beautiful photography gets someone to stay a moment. What actually gets them to enquire is what's above it.</p>
+        <div class="blog-meta">5 min read</div>
+        <div class="blog-more">Read the post →</div>
+      </div>
+    </a>
+
+    <a href="blog-pricing-discovery-calls.html" class="blog-card reveal reveal-d2">
+      <svg class="blog-thumb" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="400" height="250" fill="var(--paper)"/>
+        <circle cx="150" cy="120" r="40" fill="none" stroke="var(--ink)" stroke-width="6"/>
+        <path d="M150 96 L150 120 L168 132" fill="none" stroke="var(--gold-deep)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M195 120 Q250 120 250 165 Q250 190 300 190" fill="none" stroke="var(--gold)" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 12"/>
+        <circle cx="310" cy="193" r="10" fill="var(--coral)"/>
+      </svg>
+      <div class="blog-body">
+        <div class="blog-tag">Studio growth</div>
+        <h3>Why your discovery call is where most studios lose the deal</h3>
+        <p>It's rarely about taste. It's a missing structure, a late price conversation, and a follow-up that arrives too soft.</p>
+        <div class="blog-meta">5 min read</div>
+        <div class="blog-more">Read the post →</div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="blog-cta reveal reveal-d2">
+    <a href="book-a-call.html" class="btn btn-primary">Book a discovery call <span class="dot">·</span></a>
+  </div>
+</main>
+
+<footer>
+  <div style="display:flex; align-items:center; gap:22px;">
+    <div class="footer-brand">
+      <svg class="footer-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+      </svg>
+      <span>Social<span class="em">+Sum</span><span class="dot">.</span></span>
+    </div>
+    <div class="footer-social">
+      <a href="https://www.instagram.com/socialandsum" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="footer-actions">
+    <a href="faq.html" class="btn btn-sm btn-gold">FAQ</a>
+    <a href="contact.html" class="btn btn-sm footer-email">Email us</a>
+    <a href="book-a-call.html" class="btn btn-sm footer-cta">Book a call <span class="dot">·</span></a>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

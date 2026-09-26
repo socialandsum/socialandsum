@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Onboarding — Social + Sum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .portal-topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px; border-bottom:1px solid var(--line);
+  }
+  .portal-topbar .nav-brand{ display:flex; align-items:center; gap:10px; }
+  .portal-topbar .nav-mark{ width:28px; height:28px; }
+  .portal-topbar .nav-word{ font-size:15px; font-weight:600; letter-spacing:-0.01em; }
+  .portal-tag{
+    font-size:11px; letter-spacing:0.06em; text-transform:uppercase; font-weight:600;
+    color:var(--ink-soft); border:1px solid var(--line); border-radius:100px; padding:5px 12px;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .portal-tag svg{ width:12px; height:12px; }
+
+  .start-hero{ padding:70px 28px 20px; text-align:center; }
+  .start-hero .kicker{ justify-content:center; }
+  .start-hero p.lead{ margin:12px auto 0; }
+
+  .start-steps{
+    max-width:640px; margin:44px auto 0; padding:0 28px;
+    display:flex; flex-direction:column; gap:0;
+  }
+  .start-step{ display:flex; gap:18px; padding:22px 0; border-bottom:1px solid var(--line); }
+  .start-step:last-child{ border-bottom:none; }
+  .start-step-num{
+    flex:none; width:34px; height:34px; border-radius:50%;
+    background:var(--paper-raised); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-size:13.5px; font-weight:600; color:var(--gold-deep);
+  }
+  .start-step h4{ margin:0 0 4px; font-size:15.5px; font-weight:600; }
+  .start-step p{ margin:0; font-size:13.5px; line-height:1.6; color:var(--ink-soft); }
+
+  .start-cta{ text-align:center; margin:48px auto 100px; }
+  .start-cta .fine{ font-size:12.5px; color:var(--ink-soft); margin-top:14px; }
+</style>
+</head>
+<body>
+
+<div class="portal-topbar">
+  <div class="nav-brand">
+    <svg class="nav-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="var(--ink)"/>
+      <polyline points="30,28 70,28 40,50 70,72 30,72" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="72" cy="26" r="6" fill="var(--coral)"/>
+    </svg>
+    <span class="nav-word">Social<span class="em">+Sum</span><span class="dot">.</span></span>
+  </div>
+  <span class="portal-tag">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    Private client area
+  </span>
+</div>
+
+<header class="start-hero wrap">
+  <div class="kicker">Welcome aboard</div>
+  <h2 style="margin:0 auto;">Let's get you onboarded<span class="dot">.</span></h2>
+  <p class="lead">Since your discovery call, this is the next step: your details, our terms, our guarantee, then payment. Brand assets come last, once everything above is signed off.</p>
+</header>
+
+<main>
+  <div class="start-steps reveal">
+    <div class="start-step">
+      <div class="start-step-num">1</div>
+      <div><h4>Your details</h4><p>A few basics about you and your studio, so we can set up your account correctly.</p></div>
+    </div>
+    <div class="start-step">
+      <div class="start-step-num">2</div>
+      <div><h4>Terms of Service</h4><p>Read through, then type your name to sign electronically.</p></div>
+    </div>
+    <div class="start-step">
+      <div class="start-step-num">3</div>
+      <div><h4>Our guarantee</h4><p>What we commit to, sign off in the same way.</p></div>
+    </div>
+    <div class="start-step">
+      <div class="start-step-num">4</div>
+      <div><h4>Payment</h4><p>Secure checkout via Stripe, nothing card-related ever touches this site.</p></div>
+    </div>
+    <div class="start-step">
+      <div class="start-step-num">5</div>
+      <div><h4>Brand assets</h4><p>Once you're paid up, we'll set up a private Google Drive folder just for you — drop your logo, brand guidelines and image library in there and we'll get moving.</p></div>
+    </div>
+  </div>
+
+  <div class="start-cta reveal reveal-d1">
+    <a href="onboard.html" class="btn btn-primary">Begin onboarding <span class="dot">·</span></a>
+    <p class="fine">Takes about 5 minutes. This page isn't linked from the main site, it's just for clients who've had their call.</p>
+  </div>
+</main>
+
+<script src="site.js"></script>
+</body>
+</html>
